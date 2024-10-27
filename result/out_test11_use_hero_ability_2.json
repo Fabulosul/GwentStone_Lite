@@ -1,0 +1,46 @@
+[ {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getCardsOnTable"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getCardsInHand"
+} ]

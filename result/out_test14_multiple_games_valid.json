@@ -1,0 +1,622 @@
+[ {
+  "command" : "placeCard"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getCardsOnTable"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getFrozenCardsOnTable"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "useHeroAbility"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getCardsOnTable"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getPlayerOneWins"
+}, {
+  "command" : "getPlayerTwoWins"
+}, {
+  "command" : "getTotalGamesPlayed"
+} ]

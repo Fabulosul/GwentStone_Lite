@@ -1,0 +1,104 @@
+[ {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "cardUsesAbility"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getCardsOnTable"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getCardsInHand"
+} ]

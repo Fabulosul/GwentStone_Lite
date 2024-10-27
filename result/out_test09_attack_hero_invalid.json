@@ -1,0 +1,114 @@
+[ {
+  "command" : "placeCard"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getPlayerHero",
+  "playerIdx" : 1,
+  "output" : {
+    "mana" : 2,
+    "description" : "Premium card: Time to show who we are, the low-class was never scared of you.",
+    "colors" : [ "Brown", "Pink", "Purple" ],
+    "name" : "King Mudface",
+    "health" : 0
+  }
+}, {
+  "command" : "getPlayerHero",
+  "playerIdx" : 2,
+  "output" : {
+    "mana" : 2,
+    "description" : "Standard card: Absolute order, a soldier must devote his life to his General.",
+    "colors" : [ "Red", "Black", "Purple" ],
+    "name" : "General Kocioraw",
+    "health" : 0
+  }
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getPlayerHero",
+  "playerIdx" : 1,
+  "output" : {
+    "mana" : 2,
+    "description" : "Premium card: Time to show who we are, the low-class was never scared of you.",
+    "colors" : [ "Brown", "Pink", "Purple" ],
+    "name" : "King Mudface",
+    "health" : 0
+  }
+}, {
+  "command" : "getPlayerHero",
+  "playerIdx" : 2,
+  "output" : {
+    "mana" : 2,
+    "description" : "Standard card: Absolute order, a soldier must devote his life to his General.",
+    "colors" : [ "Red", "Black", "Purple" ],
+    "name" : "General Kocioraw",
+    "health" : 0
+  }
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getCardsOnTable"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getCardsInHand"
+} ]

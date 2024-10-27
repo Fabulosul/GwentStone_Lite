@@ -1,0 +1,43 @@
+[ {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "cardUsesAttack"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 1
+}, {
+  "command" : "getCardsOnTable"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getPlayerDeck"
+}, {
+  "command" : "getPlayerDeck"
+} ]

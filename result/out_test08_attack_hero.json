@@ -1,0 +1,147 @@
+[ {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getPlayerHero",
+  "playerIdx" : 1,
+  "output" : {
+    "mana" : 3,
+    "description" : "Standard card: Absolute order, a soldier must devote his life to his General.",
+    "colors" : [ "Green", "Yellow" ],
+    "name" : "General Kocioraw",
+    "health" : 0
+  }
+}, {
+  "command" : "getPlayerHero",
+  "playerIdx" : 2,
+  "output" : {
+    "mana" : 2,
+    "description" : "Premium card: Her majesty rule is absolute, every non-believer will suffer.",
+    "colors" : [ "Black", "Red" ],
+    "name" : "Empress Thorina",
+    "health" : 0
+  }
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerTurn",
+  "output" : 2
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getCardAtPosition"
+}, {
+  "command" : "getPlayerHero",
+  "playerIdx" : 1,
+  "output" : {
+    "mana" : 3,
+    "description" : "Standard card: Absolute order, a soldier must devote his life to his General.",
+    "colors" : [ "Green", "Yellow" ],
+    "name" : "General Kocioraw",
+    "health" : 0
+  }
+}, {
+  "command" : "getPlayerHero",
+  "playerIdx" : 2,
+  "output" : {
+    "mana" : 2,
+    "description" : "Premium card: Her majesty rule is absolute, every non-believer will suffer.",
+    "colors" : [ "Black", "Red" ],
+    "name" : "Empress Thorina",
+    "health" : 0
+  }
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "endPlayerTurn"
+}, {
+  "command" : "placeCard"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "useAttackHero"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getPlayerMana"
+}, {
+  "command" : "getCardsOnTable"
+}, {
+  "command" : "getCardsInHand"
+}, {
+  "command" : "getCardsInHand"
+} ]
