@@ -1,6 +1,5 @@
 [ {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
@@ -20,8 +19,7 @@
 }, {
   "command" : "useAttackHero"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "endPlayerTurn"
 }, {
@@ -29,8 +27,7 @@
 }, {
   "command" : "getCardAtPosition"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "cardUsesAttack"
 }, {
@@ -72,8 +69,7 @@
 }, {
   "command" : "getCardAtPosition"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useHeroAbility"
 }, {
@@ -89,8 +85,7 @@
 }, {
   "command" : "cardUsesAttack"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {

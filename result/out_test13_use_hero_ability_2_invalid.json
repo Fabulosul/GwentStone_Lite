@@ -27,8 +27,7 @@
 }, {
   "command" : "endPlayerTurn"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "placeCard"
 }, {
@@ -60,8 +59,7 @@
 }, {
   "command" : "endPlayerTurn"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
@@ -77,8 +75,7 @@
 }, {
   "command" : "endPlayerTurn"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
@@ -94,8 +91,7 @@
 }, {
   "command" : "endPlayerTurn"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {

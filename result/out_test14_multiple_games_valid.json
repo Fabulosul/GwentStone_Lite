@@ -3,8 +3,7 @@
 }, {
   "command" : "useAttackHero"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
@@ -32,8 +31,7 @@
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useAttackHero"
 }, {
@@ -53,8 +51,7 @@
 }, {
   "command" : "getPlayerMana"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "cardUsesAttack"
 }, {
@@ -64,8 +61,7 @@
 }, {
   "command" : "useHeroAbility"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getPlayerMana"
 }, {
@@ -77,8 +73,7 @@
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useAttackHero"
 }, {
@@ -98,8 +93,7 @@
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useHeroAbility"
 }, {
@@ -107,8 +101,7 @@
 }, {
   "command" : "placeCard"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useHeroAbility"
 }, {
@@ -184,8 +177,7 @@
 }, {
   "command" : "cardUsesAttack"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getPlayerMana"
 }, {
@@ -219,8 +211,7 @@
 }, {
   "command" : "getCardAtPosition"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useHeroAbility"
 }, {
@@ -248,8 +239,7 @@
 }, {
   "command" : "cardUsesAttack"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useHeroAbility"
 }, {
@@ -267,8 +257,7 @@
 }, {
   "command" : "cardUsesAttack"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getPlayerMana"
 }, {
@@ -316,8 +305,7 @@
 }, {
   "command" : "getCardsInHand"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getPlayerMana"
 }, {
@@ -327,8 +315,7 @@
 }, {
   "command" : "getCardAtPosition"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
@@ -340,8 +327,7 @@
 }, {
   "command" : "getCardAtPosition"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useAttackHero"
 }, {
@@ -367,8 +353,7 @@
 }, {
   "command" : "cardUsesAttack"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "cardUsesAbility"
 }, {
@@ -384,8 +369,7 @@
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "cardUsesAttack"
 }, {
@@ -427,8 +411,7 @@
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "endPlayerTurn"
 }, {
@@ -460,15 +443,13 @@
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "endPlayerTurn"
 }, {
   "command" : "placeCard"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getPlayerMana"
 }, {
@@ -478,8 +459,7 @@
 }, {
   "command" : "placeCard"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getPlayerMana"
 }, {
@@ -491,8 +471,7 @@
 }, {
   "command" : "getPlayerMana"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useHeroAbility"
 }, {
@@ -516,8 +495,7 @@
 }, {
   "command" : "getPlayerMana"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
@@ -551,8 +529,7 @@
 }, {
   "command" : "getCardAtPosition"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getPlayerMana"
 }, {
@@ -568,15 +545,13 @@
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "endPlayerTurn"
 }, {
   "command" : "cardUsesAbility"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "useHeroAbility"
 }, {

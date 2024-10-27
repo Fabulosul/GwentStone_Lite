@@ -31,8 +31,7 @@
 }, {
   "command" : "getFrozenCardsOnTable"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 1
+  "command" : "getPlayerTurn"
 }, {
   "command" : "getPlayerMana"
 }, {

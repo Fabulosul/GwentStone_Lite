@@ -21,8 +21,7 @@
 }, {
   "command" : "endPlayerTurn"
 }, {
-  "command" : "getPlayerTurn",
-  "output" : 2
+  "command" : "getPlayerTurn"
 }, {
   "command" : "placeCard"
 }, {

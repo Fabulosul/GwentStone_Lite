@@ -91,7 +91,7 @@ public final class Main {
          *
          */
 
-        for(int i = 0; i < inputData.getGames().size(); i++) { // for each game
+        for(int i = 0; i < inputData.getGames().size(); i++) {
            int playerOneDeckIdx = inputData.getGames().get(i).getStartGame().getPlayerOneDeckIdx();
            int playerTwoDeckIdx = inputData.getGames().get(i).getStartGame().getPlayerTwoDeckIdx();
            int shuffleSeed = inputData.getGames().get(i).getStartGame().getShuffleSeed();
@@ -111,14 +111,24 @@ public final class Main {
            player1.drawCard();
            player2.drawCard();
 
-           for(int j = 0; j < inputData.getGames().get(i).getActions().size(); j++) { // for each action
-                ObjectNode objectNode = objectMapper.createObjectNode();
-                objectNode.put("command", inputData.getGames().get(i).getActions().get(j).getCommand());
-                if(inputData.getGames().get(i).getActions().get(j).getCommand().equals("getPlayerDeck")) {
+           for(int j = 0; j < inputData.getGames().get(i).getActions().size(); j++) {
+               Command command = new Command(inputData.getGames().get(i).getActions().get(j).getCommand());
+               ObjectMapper mapper = new ObjectMapper();
+               ObjectNode objectNode = mapper.createObjectNode();
+               objectNode.put("command", command.getCommand());
 
+                if(command.getCommand().equals("getPlayerDeck")) {
+                    int playerIdx = inputData.getGames().get(i).getActions().get(j).getPlayerIdx();
+                    ArrayNode deck;
+                    if(playerIdx == 1) {
+                         deck = command.getPlayerDeck(objectNode, mapper, player1);
+                    } else {
+                        deck = command.getPlayerDeck(objectNode, mapper, player2);
+                    }
+                    objectNode.set("output", deck);
                 }
-                if(inputData.getGames().get(i).getActions().get(j).getCommand().equals("getPlayerHero")) {
-                    objectNode.put("playerIdx", inputData.getGames().get(i).getActions().get(j).getPlayerIdx());
+                if(command.equals("getPlayerHero")) {
+
                     ObjectNode heroNode = objectMapper.createObjectNode();
                     if(inputData.getGames().get(i).getActions().get(j).getPlayerIdx() == 1) {
                         heroNode.put("mana", inputData.getGames().get(i).getStartGame().getPlayerOneHero().getMana());
@@ -144,7 +154,7 @@ public final class Main {
                     }
                     objectNode.set("output", heroNode);
                 }
-                if(inputData.getGames().get(i).getActions().get(j).getCommand().equals("getPlayerTurn")) {
+                if(command.equals("getPlayerTurn")) {
                     objectNode.put("output", inputData.getGames().get(i).getStartGame().getStartingPlayer());
                 }
                 output.add(objectNode);
