@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import checker.CheckerConstants;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.CardInput;
+import fileio.Coordinates;
 import fileio.Input;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
+
 
 /**
  * The entry point to this homework. It runs the checker that tests your implentation.
@@ -90,8 +92,8 @@ public final class Main {
          * output.add(objectNode);
          *
          */
-
-        for(int i = 0; i < inputData.getGames().size(); i++) {
+        int nrGames = inputData.getGames().size();
+        for(int i = 0; i < nrGames; i++) {
            int playerOneDeckIdx = inputData.getGames().get(i).getStartGame().getPlayerOneDeckIdx();
            int playerTwoDeckIdx = inputData.getGames().get(i).getStartGame().getPlayerTwoDeckIdx();
            int shuffleSeed = inputData.getGames().get(i).getStartGame().getShuffleSeed();
@@ -105,61 +107,111 @@ public final class Main {
            ArrayList<CardInput> playerOneShuffledDeck = Utility.shuffleDeck(playerOneDeck, shuffleSeed);
            ArrayList<CardInput> playerTwoShuffledDeck = Utility.shuffleDeck(playerTwoDeck, shuffleSeed);
 
-           Player player1 = new Player(1, startingPlayer, playerOneShuffledDeck);
-           Player player2 = new Player(2, startingPlayer, playerTwoShuffledDeck);
+           CardInput playerOneHero = inputData.getGames().get(i).getStartGame().getPlayerOneHero();
+           CardInput playerTwoHero = inputData.getGames().get(i).getStartGame().getPlayerTwoHero();
 
-           player1.drawCard();
-           player2.drawCard();
+           Player playerOne = new Player(1, playerOneHero, playerOneShuffledDeck);
+           Player playerTwo = new Player(2, playerTwoHero, playerTwoShuffledDeck);
 
-           for(int j = 0; j < inputData.getGames().get(i).getActions().size(); j++) {
-               Command command = new Command(inputData.getGames().get(i).getActions().get(j).getCommand());
-               ObjectMapper mapper = new ObjectMapper();
-               ObjectNode objectNode = mapper.createObjectNode();
-               objectNode.put("command", command.getCommand());
+           playerOne.hero.setHealth(30);
+           playerTwo.hero.setHealth(30);
 
+           playerOne.drawCard();
+           playerTwo.drawCard();
+
+           Game game = new Game(startingPlayer);
+
+           Table table = new Table();
+
+           int nrActions = inputData.getGames().get(i).getActions().size();
+           for(int j = 0; j < nrActions; j++) {
+                Command command = new Command(inputData.getGames().get(i).getActions().get(j).getCommand());
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode objectNode = mapper.createObjectNode();
+
+                if(command.getCommand().equals("endPlayerTurn")) {
+                    command.endPlayerTurn(game, playerOne, playerTwo);
+                }
+                if(command.getCommand().equals("placeCard")) {
+                    int handIdx = inputData.getGames().get(i).getActions().get(j).getHandIdx();
+                    boolean canPlaceCard;
+                    if(game.getPlayerTurn() == 1) {
+                        canPlaceCard = playerOne.placeCard(objectNode, mapper, handIdx, table);
+                    } else {
+                        canPlaceCard = playerTwo.placeCard(objectNode, mapper, handIdx, table);
+                    }
+                    if(!canPlaceCard) {
+                        output.add(objectNode);
+                    }
+                }
+                if(command.getCommand().equals("cardUsesAttack")) {
+                    Coordinates cardAttackerCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacker();
+                    Coordinates cardAttackedCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacked();
+
+                    CardInput cardAttacker = table.getTableCards()[cardAttackerCoordinates.getX()][cardAttackerCoordinates.getY()];
+                    CardInput cardAttacked = table.getTableCards()[cardAttackedCoordinates.getX()][cardAttackedCoordinates.getY()];
+
+                    cardAttacker.cardUsesAttack(cardAttacked, cardAttackerCoordinates, cardAttackedCoordinates, table, objectNode, mapper);
+
+                }
+                if(command.getCommand().equals("getPlayerMana")) {
+                    int playerIdx = inputData.getGames().get(i).getActions().get(j).getPlayerIdx();
+                    objectNode.put("command", "getPlayerMana");
+                    if(playerIdx == 1) {
+                        objectNode.put("playerIdx", 1);
+                        objectNode.put("output", playerOne.getPlayerMana());
+                    } else {
+                        objectNode.put("playerIdx", 2);
+                        objectNode.put("output", playerTwo.getPlayerMana());
+                    }
+                    output.add(objectNode);
+                }
+                if(command.getCommand().equals("getCardsInHand")) {
+                    int playerIdx = inputData.getGames().get(i).getActions().get(j).getPlayerIdx();
+                    ArrayNode cardsInHand;
+                    if(playerIdx == 1) {
+                        cardsInHand = command.getCardsInHand(objectNode, mapper, playerOne);
+                    } else {
+                        cardsInHand = command.getCardsInHand(objectNode, mapper, playerTwo);
+                    }
+                    objectNode.set("output", cardsInHand);
+                    output.add(objectNode);
+                }
+                if(command.getCommand().equals("getCardsOnTable")){
+                    ArrayNode cardsOnTable = table.getCardsOnTable(objectNode, mapper);
+                    objectNode.set("output", cardsOnTable);
+                    output.add(objectNode);
+                }
                 if(command.getCommand().equals("getPlayerDeck")) {
                     int playerIdx = inputData.getGames().get(i).getActions().get(j).getPlayerIdx();
                     ArrayNode deck;
                     if(playerIdx == 1) {
-                         deck = command.getPlayerDeck(objectNode, mapper, player1);
+                         deck = command.getPlayerDeck(objectNode, mapper, playerOne);
                     } else {
-                        deck = command.getPlayerDeck(objectNode, mapper, player2);
+                        deck = command.getPlayerDeck(objectNode, mapper, playerTwo);
                     }
                     objectNode.set("output", deck);
+                    output.add(objectNode);
                 }
-                if(command.equals("getPlayerHero")) {
-
-                    ObjectNode heroNode = objectMapper.createObjectNode();
-                    if(inputData.getGames().get(i).getActions().get(j).getPlayerIdx() == 1) {
-                        heroNode.put("mana", inputData.getGames().get(i).getStartGame().getPlayerOneHero().getMana());
-                        heroNode.put("description", inputData.getGames().get(i).getStartGame().getPlayerOneHero().getDescription());
-                        ArrayNode colorsArray = objectMapper.createArrayNode();
-                        for (String color : inputData.getGames().get(i).getStartGame().getPlayerOneHero().getColors()) {
-                            colorsArray.add(color);
-                        }
-                        heroNode.set("colors", colorsArray);
-                        heroNode.put("name", inputData.getGames().get(i).getStartGame().getPlayerOneHero().getName());
-                        heroNode.put("health", inputData.getGames().get(i).getStartGame().getPlayerOneHero().getHealth());
+                if(command.getCommand().equals("getPlayerHero")) {
+                    int playerIdx = inputData.getGames().get(i).getActions().get(j).getPlayerIdx();
+                    ObjectNode hero;
+                    if(playerIdx == 1) {
+                        hero = command.getPlayerHero(objectNode, mapper, playerOne);
+                    } else {
+                        hero = command.getPlayerHero(objectNode, mapper, playerTwo);
                     }
-                    if(inputData.getGames().get(i).getActions().get(j).getPlayerIdx() == 2) {
-                        heroNode.put("mana", inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getMana());
-                        heroNode.put("description", inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getDescription());
-                        ArrayNode colorsArray = objectMapper.createArrayNode();
-                        for (String color : inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getColors()) {
-                            colorsArray.add(color);
-                        }
-                        heroNode.set("colors", colorsArray);
-                        heroNode.put("name", inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getName());
-                        heroNode.put("health", inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getHealth());
-                    }
-                    objectNode.set("output", heroNode);
+                    objectNode.set("output", hero);
+                    output.add(objectNode);
                 }
-                if(command.equals("getPlayerTurn")) {
-                    objectNode.put("output", inputData.getGames().get(i).getStartGame().getStartingPlayer());
+                if(command.getCommand().equals("getPlayerTurn")) {
+                    objectNode.put("command", "getPlayerTurn");
+                    objectNode.put("output", command.getPlayerTurn(game));
+                    output.add(objectNode);
                 }
-                output.add(objectNode);
             }
         }
+
 
 
 

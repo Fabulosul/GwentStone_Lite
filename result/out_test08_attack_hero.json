@@ -1,113 +1,180 @@
 [ {
-  "command" : "endPlayerTurn"
+  "command" : "getCardsInHand",
+  "playerIdx" : 2,
+  "output" : [ {
+    "mana" : 2,
+    "attackDamage" : 0,
+    "health" : 1,
+    "description" : "Premium card: Nobody suspects an outcast, not even the Gods.",
+    "colors" : [ "Pink", "Purple" ],
+    "name" : "The Cursed One"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 5,
+    "health" : 3,
+    "description" : "Standard card: Trained by the best, nothing will catch him off-guard.",
+    "colors" : [ "Black", "White" ],
+    "name" : "Sentinel"
+  } ]
 }, {
-  "command" : "endPlayerTurn"
+  "command" : "getPlayerMana",
+  "playerIdx" : 2,
+  "output" : 5
 }, {
-  "command" : "placeCard"
+  "command" : "getPlayerTurn",
+  "output" : 2
 }, {
-  "command" : "useAttackHero"
+  "command" : "getPlayerHero",
+  "playerIdx" : 1,
+  "output" : {
+    "mana" : 3,
+    "description" : "Standard card: Absolute order, a soldier must devote his life to his General.",
+    "colors" : [ "Green", "Yellow" ],
+    "name" : "General Kocioraw",
+    "health" : 30
+  }
 }, {
-  "command" : "endPlayerTurn"
+  "command" : "getPlayerHero",
+  "playerIdx" : 2,
+  "output" : {
+    "mana" : 2,
+    "description" : "Premium card: Her majesty rule is absolute, every non-believer will suffer.",
+    "colors" : [ "Black", "Red" ],
+    "name" : "Empress Thorina",
+    "health" : 30
+  }
 }, {
-  "command" : "placeCard"
+  "command" : "getCardsInHand",
+  "playerIdx" : 2,
+  "output" : [ {
+    "mana" : 2,
+    "attackDamage" : 0,
+    "health" : 1,
+    "description" : "Premium card: Nobody suspects an outcast, not even the Gods.",
+    "colors" : [ "Pink", "Purple" ],
+    "name" : "The Cursed One"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 6,
+    "health" : 1,
+    "description" : "Premium card: Fear him. Your last breath is now.",
+    "colors" : [ "Purple", "Yellow" ],
+    "name" : "Berserker"
+  } ]
 }, {
-  "command" : "useAttackHero"
+  "command" : "getPlayerMana",
+  "playerIdx" : 2,
+  "output" : 8
 }, {
-  "command" : "endPlayerTurn"
+  "command" : "getPlayerTurn",
+  "output" : 2
 }, {
-  "command" : "getCardsInHand"
+  "command" : "getPlayerHero",
+  "playerIdx" : 1,
+  "output" : {
+    "mana" : 3,
+    "description" : "Standard card: Absolute order, a soldier must devote his life to his General.",
+    "colors" : [ "Green", "Yellow" ],
+    "name" : "General Kocioraw",
+    "health" : 30
+  }
 }, {
-  "command" : "getPlayerMana"
+  "command" : "getPlayerHero",
+  "playerIdx" : 2,
+  "output" : {
+    "mana" : 2,
+    "description" : "Premium card: Her majesty rule is absolute, every non-believer will suffer.",
+    "colors" : [ "Black", "Red" ],
+    "name" : "Empress Thorina",
+    "health" : 30
+  }
 }, {
-  "command" : "getPlayerTurn"
+  "command" : "getPlayerMana",
+  "playerIdx" : 2,
+  "output" : 9
 }, {
-  "command" : "placeCard"
+  "command" : "getPlayerMana",
+  "playerIdx" : 1,
+  "output" : 7
 }, {
-  "command" : "getCardAtPosition"
+  "command" : "getCardsOnTable",
+  "output" : [ [ {
+    "mana" : 1,
+    "attackDamage" : 0,
+    "health" : 1,
+    "description" : "Premium card: Nobody suspects an outcast, not even the Gods.",
+    "colors" : [ "Black", "White", "Red" ],
+    "name" : "The Cursed One"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 5,
+    "health" : 3,
+    "description" : "Standard card: Trained by the best, nothing will catch him off-guard.",
+    "colors" : [ "Black", "White" ],
+    "name" : "Sentinel"
+  }, {
+    "mana" : 2,
+    "attackDamage" : 0,
+    "health" : 1,
+    "description" : "Premium card: Nobody suspects an outcast, not even the Gods.",
+    "colors" : [ "Pink", "Purple" ],
+    "name" : "The Cursed One"
+  }, {
+    "mana" : 1,
+    "attackDamage" : 6,
+    "health" : 1,
+    "description" : "Premium card: Fear him. Your last breath is now.",
+    "colors" : [ "Purple", "Yellow" ],
+    "name" : "Berserker"
+  } ], [ {
+    "mana" : 1,
+    "attackDamage" : 6,
+    "health" : 4,
+    "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
+    "colors" : [ "Yellow", "Orange", "Red" ],
+    "name" : "Miraj"
+  } ], [ ], [ {
+    "mana" : 2,
+    "attackDamage" : 0,
+    "health" : 1,
+    "description" : "Premium card: Nobody suspects an outcast, not even the Gods.",
+    "colors" : [ "Black", "White", "Red" ],
+    "name" : "The Cursed One"
+  }, {
+    "mana" : 2,
+    "attackDamage" : 5,
+    "health" : 3,
+    "description" : "Standard card: Trained by the best, nothing will catch him off-guard.",
+    "colors" : [ "Black", "White" ],
+    "name" : "Sentinel"
+  }, {
+    "mana" : 2,
+    "attackDamage" : 0,
+    "health" : 3,
+    "description" : "Premium card: Nobody suspects an outcast, not even the Gods.",
+    "colors" : [ "Black", "White", "Red" ],
+    "name" : "The Cursed One"
+  }, {
+    "mana" : 2,
+    "attackDamage" : 6,
+    "health" : 2,
+    "description" : "Standard card: A drink can always be served, with the blood of his enemies.",
+    "colors" : [ "Red", "Blue", "Pink" ],
+    "name" : "Berserker"
+  } ] ]
 }, {
-  "command" : "getCardAtPosition"
+  "command" : "getCardsInHand",
+  "playerIdx" : 2,
+  "output" : [ ]
 }, {
-  "command" : "getPlayerHero"
-}, {
-  "command" : "getPlayerHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard"
-}, {
-  "command" : "placeCard"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "getCardsInHand"
-}, {
-  "command" : "getPlayerMana"
-}, {
-  "command" : "getPlayerTurn"
-}, {
-  "command" : "placeCard"
-}, {
-  "command" : "placeCard"
-}, {
-  "command" : "getCardAtPosition"
-}, {
-  "command" : "getCardAtPosition"
-}, {
-  "command" : "getPlayerHero"
-}, {
-  "command" : "getPlayerHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "getPlayerMana"
-}, {
-  "command" : "getPlayerMana"
-}, {
-  "command" : "getCardsOnTable"
-}, {
-  "command" : "getCardsInHand"
-}, {
-  "command" : "getCardsInHand"
+  "command" : "getCardsInHand",
+  "playerIdx" : 1,
+  "output" : [ {
+    "mana" : 2,
+    "attackDamage" : 5,
+    "health" : 2,
+    "description" : "Premium card: Fear him. Your last breath is now.",
+    "colors" : [ "Red", "Blue", "Pink" ],
+    "name" : "Berserker"
+  } ]
 } ]
