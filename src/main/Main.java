@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.XMLFormatter;
 
 
 /**
@@ -130,7 +131,7 @@ public final class Main {
                 ObjectNode objectNode = mapper.createObjectNode();
 
                 if(command.getCommand().equals("endPlayerTurn")) {
-                    command.endPlayerTurn(game, playerOne, playerTwo);
+                    command.endPlayerTurn(game, playerOne, playerTwo, table);
                 }
                 if(command.getCommand().equals("placeCard")) {
                     int handIdx = inputData.getGames().get(i).getActions().get(j).getHandIdx();
@@ -145,14 +146,25 @@ public final class Main {
                     }
                 }
                 if(command.getCommand().equals("cardUsesAttack")) {
+                    System.out.println("cardUsesAttack" + i + " " + j + " " + inputData.getGames().get(i).getActions().get(j).getCardAttacker().getX() + " " + inputData.getGames().get(i).getActions().get(j).getCardAttacker().getY() + " " + inputData.getGames().get(i).getActions().get(j).getCardAttacked().getX() + " " + inputData.getGames().get(i).getActions().get(j).getCardAttacked().getY());
                     Coordinates cardAttackerCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacker();
                     Coordinates cardAttackedCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacked();
 
-                    CardInput cardAttacker = table.getTableCards()[cardAttackerCoordinates.getX()][cardAttackerCoordinates.getY()];
-                    CardInput cardAttacked = table.getTableCards()[cardAttackedCoordinates.getX()][cardAttackedCoordinates.getY()];
+                    CardInput cardAttacker = table.getTableCards().get(cardAttackerCoordinates.getX()).get(cardAttackerCoordinates.getY());
+                    CardInput cardAttacked = table.getTableCards().get(cardAttackedCoordinates.getX()).get(cardAttackedCoordinates.getY());
 
-                    cardAttacker.cardUsesAttack(cardAttacked, cardAttackerCoordinates, cardAttackedCoordinates, table, objectNode, mapper);
+                  boolean hasAttacked = cardAttacker.cardUsesAttack(cardAttacked, cardAttackerCoordinates, cardAttackedCoordinates, table, objectNode, mapper);
 
+                    if(!hasAttacked) {
+                        output.add(objectNode);
+                    }
+                }
+                if(command.getCommand().equals("getCardAtPosition")) {
+                    int cardRow = inputData.getGames().get(i).getActions().get(j).getX();
+                    int cardColumn = inputData.getGames().get(i).getActions().get(j).getY();
+
+                    table.getCardAtPosition(table, cardRow, cardColumn, objectNode, mapper);
+                    output.add(objectNode);
                 }
                 if(command.getCommand().equals("getPlayerMana")) {
                     int playerIdx = inputData.getGames().get(i).getActions().get(j).getPlayerIdx();
@@ -210,10 +222,8 @@ public final class Main {
                     output.add(objectNode);
                 }
             }
+            System.out.println("Game ended");
         }
-
-
-
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

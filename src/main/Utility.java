@@ -1,5 +1,8 @@
 package main;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.CardInput;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,10 +15,10 @@ public class Utility {
     }
 
 
-    public static ArrayList<CardInput> chooseDeck(int playerDeckIdx, ArrayList<ArrayList<CardInput>> decks){
+    public static ArrayList<CardInput> chooseDeck(int playerDeckIdx, ArrayList<ArrayList<CardInput>> decks) {
         ArrayList<CardInput> currentDeck = new ArrayList<>();
-        for(int i = 0; i < decks.get(playerDeckIdx).size(); i++) {
-            currentDeck.add(i, decks.get(playerDeckIdx).get(i));
+        for (CardInput card : decks.get(playerDeckIdx)) {
+            currentDeck.add(new CardInput(card));
         }
         return currentDeck;
     }
@@ -34,4 +37,5 @@ public class Utility {
             return 2;
         }
     }
+
 }

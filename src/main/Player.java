@@ -49,23 +49,21 @@ public class Player {
             return false;
         } else {
             if(this.id == 1) {
-                if(table.getP1BackRowNrCards() == 5) {
+                if(table.getTableCards().get(3).size() == 5) {
                     placeCardFailed(objectNode, handIdx, "Cannot place card on table since row is full.");
                     return false;
                 } else {
                     this.mana = this.mana - cardMana;
-                    table.getTableCards()[3][table.getP1BackRowNrCards()] = this.cardsInHand.get(handIdx);
-                    table.setP1BackRowNrCards(table.getP1BackRowNrCards() + 1);
-                    this.cardsInHand.remove(handIdx);
+                    table.getTableCards().get(3).add(cardsInHand.get(handIdx));
+                    cardsInHand.remove(handIdx);
                 }
             } else {
-                if(table.getP2BackRowNrCards() == 5) {
+                if(table.getTableCards().get(0).size() == 5) {
                     placeCardFailed(objectNode, handIdx, "Cannot place card on table since row is full.");
                     return false;
                 } else {
                     this.mana = this.mana - cardMana;
-                    table.getTableCards()[0][table.getP2BackRowNrCards()] = this.cardsInHand.get(handIdx);
-                    table.setP2BackRowNrCards(table.getP2BackRowNrCards() + 1);
+                    table.getTableCards().get(0).add(cardsInHand.get(handIdx));
                     this.cardsInHand.remove(handIdx);
                 }
             }
@@ -82,23 +80,21 @@ public class Player {
             return false;
         } else {
             if(this.id == 1) {
-                if(table.getP1FrontRowNrCards() == 5) {
+                if(table.getTableCards().get(2).size() == 5) {
                     placeCardFailed(objectNode, handIdx, "Cannot place card on table since row is full.");
                     return false;
                 } else {
                     this.mana = this.mana - cardMana;
-                    table.getTableCards()[2][table.getP1FrontRowNrCards()] = this.cardsInHand.get(handIdx);
-                    table.setP1FrontRowNrCards(table.getP1FrontRowNrCards() + 1);
+                    table.getTableCards().get(2).add(cardsInHand.get(handIdx));
                     this.cardsInHand.remove(handIdx);
                 }
             } else {
-                if(table.getP2FrontRowNrCards() == 5) {
+                if(table.getTableCards().get(1).size() == 5) {
                     placeCardFailed(objectNode, handIdx, "Cannot place card on table since row is full.");
                     return false;
                 } else {
                     this.mana = this.mana - cardMana;
-                    table.getTableCards()[1][table.getP2FrontRowNrCards()] = this.cardsInHand.get(handIdx);
-                    table.setP2FrontRowNrCards(table.getP2FrontRowNrCards() + 1);
+                    table.getTableCards().get(1).add(cardsInHand.get(handIdx));
                     this.cardsInHand.remove(handIdx);
                 }
             }

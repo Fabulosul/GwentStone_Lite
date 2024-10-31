@@ -24,6 +24,19 @@ public final class CardInput {
         hasUsedAbility = false;
     }
 
+    public CardInput(CardInput card) {
+        this.mana = card.mana;
+        this.attackDamage = card.attackDamage;
+        this.health = card.health;
+        this.isFrozen = card.isFrozen;
+        this.hasAttacked = card.hasAttacked;
+        this.hasUsedAbility = card.hasUsedAbility;
+        this.description = card.description;
+        this.colors = new ArrayList<>(card.colors);
+        this.name = card.name;
+    }
+
+
     public void cardUsesAttackFailed(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
                                            String message, ObjectNode objectNode, ObjectMapper mapper) {
         objectNode.put("command", "cardUsesAttack");
@@ -40,7 +53,8 @@ public final class CardInput {
         objectNode.put("error", message);
     }
 
-    public boolean cardUsesAttack(CardInput cardAttacked, Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
+
+       public boolean cardUsesAttack(CardInput cardAttacked, Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
                                Table table, ObjectNode objectNode,
                                ObjectMapper mapper) {
 
@@ -48,67 +62,38 @@ public final class CardInput {
         int cardAttackedId = Utility.getPlayerId(cardAttackedCoordinates.getX());
 
         if(cardAttackerId == cardAttackedId) {
-            this.cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+            cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacked card does not belong to the enemy.", objectNode, mapper);
             return false;
         }
 
-        if(this.hasAttacked) {
-            this.cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+        if(hasAttacked) {
+            cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacker card has already attacked this turn.", objectNode, mapper);
             return false;
         }
 
-        if(this.isFrozen) {
-            this.cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+        if(isFrozen) {
+            cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacker card is frozen.", objectNode, mapper);
             return false;
         }
 
-        if(table.checkForTankCards(cardAttackedId, table)) { // check if there is any tank card
-            if(cardAttackedCoordinates.getX() != 1 &&  cardAttackedCoordinates.getX() != 2) { // the card is not tank
-                this.cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+        if(table.checkForTankCards(cardAttackedId)) { // check if there is any tank card
+            if(cardAttackedCoordinates.getX() != 1 && cardAttackedCoordinates.getX() != 2) { // the card is not tank
+                cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                         "Attacked card is not of type 'Tank’.", objectNode, mapper);
                 return false;
             }
-            this.hasAttacked = true;
-            if(cardAttacked.getHealth() > this.getAttackDamage()) { // the card is not destroyed
-                cardAttacked.setHealth(cardAttacked.getHealth() - this.getAttackDamage());
-            } else {
-                if(cardAttackedId == 1) {
-                    table.getTableCards()[2][cardAttackedCoordinates.getY()] = null;
-                    for(int j = cardAttackedCoordinates.getY(); j < table.getP1FrontRowNrCards() - 1; j++) {
-                        table.getTableCards()[2][j] = table.getTableCards()[2][j + 1];
-                    }
-                    table.setP1FrontRowNrCards(table.getP1FrontRowNrCards() - 1);
-                } else {
-                    table.getTableCards()[1][cardAttackedCoordinates.getY()] = null;
-                    for(int j = cardAttackedCoordinates.getY(); j < table.getP2FrontRowNrCards() - 1; j++) {
-                        table.getTableCards()[1][j] = table.getTableCards()[1][j + 1];
-                    }
-                    table.setP2FrontRowNrCards(table.getP2FrontRowNrCards() - 1);
-                }
-            }
         }
         this.hasAttacked = true;
-        if(cardAttacked.getHealth() > this.getAttackDamage()) { // the card is not destroyed
+        if (cardAttacked.getHealth() > this.getAttackDamage()) { // the card is not destroyed
             cardAttacked.setHealth(cardAttacked.getHealth() - this.getAttackDamage());
         } else {
-            if (cardAttackedId == 1) {
-                table.getTableCards()[3][cardAttackedCoordinates.getY()] = null;
-                for (int j = cardAttackedCoordinates.getY(); j < table.getP1BackRowNrCards() - 1; j++) {
-                    table.getTableCards()[3][j] = table.getTableCards()[3][j + 1];
-                }
-                table.setP1BackRowNrCards(table.getP1BackRowNrCards() - 1);
-            } else {
-                table.getTableCards()[0][cardAttackedCoordinates.getY()] = null;
-                for (int j = cardAttackedCoordinates.getY(); j < table.getP2BackRowNrCards() - 1; j++) {
-                    table.getTableCards()[0][j] = table.getTableCards()[1][j + 1];
-                }
-                table.setP2BackRowNrCards(table.getP2BackRowNrCards() - 1);
-            }
-        }
-        return true;
+            ArrayList<CardInput> row = table.getTableCards().get(cardAttackedCoordinates.getX());
+            row.remove(cardAttackedCoordinates.getY());
+       }
+       return true;
     }
 
     public int getMana() {
@@ -157,6 +142,14 @@ public final class CardInput {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public boolean isHasAttacked() {
+        return hasAttacked;
+    }
+
+    public void setHasAttacked(boolean hasAttacked) {
+        this.hasAttacked = hasAttacked;
     }
 
     public boolean getIsFrozen() {

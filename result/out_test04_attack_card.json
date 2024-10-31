@@ -86,13 +86,6 @@
     "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
     "colors" : [ "Red", "Purple" ],
     "name" : "Goliath"
-  }, {
-    "mana" : 5,
-    "attackDamage" : 5,
-    "health" : 3,
-    "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
-    "colors" : [ "Yellow", "Orange", "Red" ],
-    "name" : "Miraj"
   } ]
 }, {
   "command" : "getPlayerDeck",
@@ -130,6 +123,13 @@
   "command" : "getPlayerDeck",
   "playerIdx" : 1,
   "output" : [ {
+    "mana" : 5,
+    "attackDamage" : 5,
+    "health" : 3,
+    "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
+    "colors" : [ "Yellow", "Orange", "Red" ],
+    "name" : "Miraj"
+  }, {
     "mana" : 3,
     "attackDamage" : 2,
     "health" : 7,

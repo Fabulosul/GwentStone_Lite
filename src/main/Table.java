@@ -8,16 +8,16 @@ import fileio.CardInput;
 import java.util.ArrayList;
 
 public class Table {
-    private CardInput[][] tableCards;
-    private int p1BackRowNrCards;
-    private int p1FrontRowNrCards;
-    private int p2BackRowNrCards;
-    private int p2FrontRowNrCards;
+    private ArrayList<ArrayList<CardInput>> tableCards;
 
     public Table() {
-        this.tableCards = new CardInput[4][5];
-    }
+        tableCards = new ArrayList<>();
 
+        for (int i = 0; i < 4; i++) {
+            ArrayList<CardInput> row = new ArrayList<>();
+            tableCards.add(row);
+        }
+    }
 
     public ObjectNode createCardObject(ObjectMapper mapper, CardInput card) {
         ObjectNode cardObject = mapper.createObjectNode();
@@ -40,61 +40,81 @@ public class Table {
 
         for (int i = 0; i < 4; i++) {
             ArrayNode playerRowObjArr = mapper.createArrayNode();
-            for (int j = 0; j < 5; j++) {
-                if(tableCards[i][j] != null) {
-                    playerRowObjArr.add(createCardObject(mapper, tableCards[i][j]));
-                }
+            for (int j = 0; j <  tableCards.get(i).size(); j++) {
+                    playerRowObjArr.add(createCardObject(mapper, tableCards.get(i).get(j)));
             }
             cardsOnTable.add(playerRowObjArr);
         }
         return cardsOnTable;
     }
 
-    public boolean checkForTankCards(int playerId, Table table) {
-        if(playerId == 1) {
-            return table.p1FrontRowNrCards != 0;
+    public boolean checkForTankCards(int playerIdx) {
+        if(playerIdx == 1){
+            if(getTableCards().get(2) == null) {
+                System.out.println("is null");
+            }
+            for (int j = 0; j < getTableCards().get(2).size(); j++) {
+                if(getTableCards().get(2).get(j).getName().equals("Goliath") ||
+                        getTableCards().get(2).get(j).getName().equals("Warden")) {
+                    return true;
+                }
+            }
         } else {
-            return table.p2FrontRowNrCards != 0;
+            if(getTableCards().get(1) == null) {
+                System.out.println("is null");
+            }
+            for (int j = 0; j < getTableCards().get(1).size(); j++) {
+                if(getTableCards().get(1).get(j).getName().equals("Goliath") ||
+                        getTableCards().get(1).get(j).getName().equals("Warden")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void resetCardProperties() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < tableCards.get(i).size(); j++) {
+                if(tableCards.get(i).get(j) != null) {
+                    this.getTableCards().get(i).get(j).setIsFrozen(false);
+                    this.getTableCards().get(i).get(j).setHasAttacked(false);
+                    this.getTableCards().get(i).get(j).setHasUsedAbility(false);
+                }
+            }
         }
     }
 
-    public CardInput[][] getTableCards() {
+    public void getCardAtPosition(Table table, int cardRow, int cardColumn,
+                                  ObjectNode objectNode, ObjectMapper mapper) {
+        objectNode.put("command", "getCardAtPosition");
+        objectNode.put("x", cardRow);
+        objectNode.put("y", cardColumn);
+        if(table.getTableCards().get(cardRow).size() > cardColumn) {
+            CardInput card = table.getTableCards().get(cardRow).get(cardColumn);
+            ObjectNode cardObject = mapper.createObjectNode();
+            cardObject.put("mana", card.getMana());
+            cardObject.put("attackDamage", card.getAttackDamage());
+            cardObject.put("health", card.getHealth());
+            cardObject.put("description", card.getDescription());
+            ArrayNode colors = mapper.createArrayNode();
+            for(int j = 0; j < card.getColors().size(); j++) {
+                colors.add(card.getColors().get(j));
+            }
+            cardObject.set("colors", colors);
+            cardObject.put("name", card.getName());
+            objectNode.set("output", cardObject);
+        } else {
+            objectNode.put("output", "No card available at that position.");
+        }
+    }
+
+    public ArrayList<ArrayList<CardInput>> getTableCards() {
         return tableCards;
     }
 
-    public void setTableCards(CardInput[][] tableCards) {
+    public void setTableCards(ArrayList<ArrayList<CardInput>> tableCards) {
         this.tableCards = tableCards;
     }
 
-    public int getP1BackRowNrCards() {
-        return p1BackRowNrCards;
-    }
-
-    public void setP1BackRowNrCards(int p1BackRowNrCards) {
-        this.p1BackRowNrCards = p1BackRowNrCards;
-    }
-
-    public int getP1FrontRowNrCards() {
-        return p1FrontRowNrCards;
-    }
-
-    public void setP1FrontRowNrCards(int p1FrontRowNrCards) {
-        this.p1FrontRowNrCards = p1FrontRowNrCards;
-    }
-
-    public int getP2BackRowNrCards() {
-        return p2BackRowNrCards;
-    }
-
-    public void setP2BackRowNrCards(int p2BackRowNrCards) {
-        this.p2BackRowNrCards = p2BackRowNrCards;
-    }
-
-    public int getP2FrontRowNrCards() {
-        return p2FrontRowNrCards;
-    }
-
-    public void setP2FrontRowNrCards(int p2FrontRowNrCards) {
-        this.p2FrontRowNrCards = p2FrontRowNrCards;
-    }
 }

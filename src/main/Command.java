@@ -53,19 +53,20 @@ public class Command {
         return game.getPlayerTurn();
     }
 
-    void endPlayerTurn(Game game, Player playerOne, Player playerTwo) {
+    void endPlayerTurn(Game game, Player playerOne, Player playerTwo, Table table) {
         game.setTotalTurns(game.getTotalTurns() + 1);
         if(game.getPlayerTurn() == 1) {
             game.setPlayerTurn(2);
-            playerOne.drawCard();
         } else {
             game.setPlayerTurn(1);
-            playerTwo.drawCard();
         }
         if(game.getTotalTurns() % 2 == 0) {
             game.setNrRound(game.getNrRound() + 1);
             playerOne.mana += game.getNrRound();
             playerTwo.mana += game.getNrRound();
+            playerOne.drawCard();
+            playerTwo.drawCard();
+            table.resetCardProperties();
         }
     }
 
