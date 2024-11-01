@@ -173,6 +173,39 @@ public final class Main {
                     }
 
                 }
+                if(command.getCommand().equals("useAttackHero")) {
+                    Coordinates cardAttackerCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacker();
+                    CardInput cardAttacker = table.getTableCards().get(cardAttackerCoordinates.getX()).get(cardAttackerCoordinates.getY());
+                    boolean hasAttackedHero;
+                    if(Utility.getPlayerId(cardAttackerCoordinates.getX()) == 1) {
+                        hasAttackedHero = cardAttacker.useAttackHero(cardAttackerCoordinates, playerTwoHero, table,
+                                objectNode, mapper);
+                        if(!hasAttackedHero || playerTwoHero.getHealth() == 0) {
+                            output.add(objectNode);
+                        }
+                    } else {
+                        hasAttackedHero = cardAttacker.useAttackHero(cardAttackerCoordinates, playerOneHero, table,
+                                objectNode, mapper);
+                        if(!hasAttackedHero || playerOneHero.getHealth() == 0) {
+                            output.add(objectNode);
+                        }
+                    }
+                }
+                if(command.getCommand().equals("useHeroAbility")) {
+                    int affectedRow = inputData.getGames().get(i).getActions().get(j).getAffectedRow();
+                    int currentPlayerTurn = game.getPlayerTurn();
+                    boolean heroUsedAbility;
+                    if(currentPlayerTurn == 1) {
+                        heroUsedAbility = playerOne.hero.useHeroAbility(affectedRow, currentPlayerTurn,
+                                playerOne, table, objectNode, mapper);
+                    } else {
+                        heroUsedAbility = playerTwo.hero.useHeroAbility(affectedRow, currentPlayerTurn,
+                                playerTwo, table, objectNode, mapper);
+                    }
+                    if(!heroUsedAbility) {
+                        output.add(objectNode);
+                    }
+                }
                 if(command.getCommand().equals("getCardAtPosition")) {
                     int cardRow = inputData.getGames().get(i).getActions().get(j).getX();
                     int cardColumn = inputData.getGames().get(i).getActions().get(j).getY();
@@ -185,10 +218,10 @@ public final class Main {
                     objectNode.put("command", "getPlayerMana");
                     if(playerIdx == 1) {
                         objectNode.put("playerIdx", 1);
-                        objectNode.put("output", playerOne.getPlayerMana());
+                        objectNode.put("output", playerOne.getMana());
                     } else {
                         objectNode.put("playerIdx", 2);
-                        objectNode.put("output", playerTwo.getPlayerMana());
+                        objectNode.put("output", playerTwo.getMana());
                     }
                     output.add(objectNode);
                 }
@@ -208,6 +241,11 @@ public final class Main {
                     objectNode.set("output", cardsOnTable);
                     output.add(objectNode);
                 }
+               if(command.getCommand().equals("getFrozenCardsOnTable")){
+                   ArrayNode frozenCardsOnTable = table.getFrozenCardsOnTable(objectNode, mapper);
+                   objectNode.set("output", frozenCardsOnTable);
+                   output.add(objectNode);
+               }
                 if(command.getCommand().equals("getPlayerDeck")) {
                     int playerIdx = inputData.getGames().get(i).getActions().get(j).getPlayerIdx();
                     ArrayNode deck;
@@ -236,6 +274,7 @@ public final class Main {
                     output.add(objectNode);
                 }
             }
+           System.out.println("Game " + (i + 1) + " ended");
         }
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();

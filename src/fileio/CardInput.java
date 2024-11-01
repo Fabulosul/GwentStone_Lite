@@ -2,6 +2,7 @@ package fileio;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import main.Player;
 import main.Table;
 import main.Utility;
 
@@ -86,11 +87,6 @@ public final class CardInput {
        return true;
     }
 
-    public void cardUsesAbilityFailed(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
-                                     String message, ObjectNode objectNode, ObjectMapper mapper) {
-        objectNode.put("command", "cardUsesAbility");
-        cardUseAction(cardAttackerCoordinates, cardAttackedCoordinates, message, objectNode, mapper);
-    }
 
     private void cardUseAction(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates, String message, ObjectNode objectNode, ObjectMapper mapper) {
         ObjectNode attackerCoordinates = mapper.createObjectNode();
@@ -103,6 +99,12 @@ public final class CardInput {
         attackedCoordinates.put("y", cardAttackedCoordinates.getY());
         objectNode.set("cardAttacked", attackedCoordinates);
         objectNode.put("error", message);
+    }
+
+    public void cardUsesAbilityFailed(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
+                                      String message, ObjectNode objectNode, ObjectMapper mapper) {
+        objectNode.put("command", "cardUsesAbility");
+        cardUseAction(cardAttackerCoordinates, cardAttackedCoordinates, message, objectNode, mapper);
     }
 
     public void cardUsesAbilitySuccess(CardInput cardAttacked,
@@ -179,6 +181,151 @@ public final class CardInput {
 
         return true;
     }
+
+    public void useAttackHeroFailed(Coordinates cardAttackerCoordinates, String message,
+                                    ObjectNode objectNode, ObjectMapper mapper) {
+        objectNode.put("command", "useAttackHero");
+        ObjectNode attackerCoordinates = mapper.createObjectNode();
+        attackerCoordinates.put("x", cardAttackerCoordinates.getX());
+        attackerCoordinates.put("y", cardAttackerCoordinates.getY());
+        objectNode.set("cardAttacker", attackerCoordinates);
+        objectNode.put("error", message);
+    }
+
+    public void useAttackHeroSuccess(CardInput heroAttacked, int cardAttackerId, ObjectNode objectNode) {
+        hasAttacked = true;
+        if(getAttackDamage() >= heroAttacked.getHealth()) {
+            heroAttacked.setHealth(0);
+            if(cardAttackerId == 1) {
+                objectNode.put("gameEnded", "Player one killed the enemy hero.");
+            } else {
+                objectNode.put("gameEnded", "Player two killed the enemy hero.");
+            }
+        } else {
+            heroAttacked.setHealth(heroAttacked.getHealth() - getAttackDamage());
+        }
+    }
+
+    public boolean useAttackHero(Coordinates cardAttackerCoordinates, CardInput heroAttacked,
+                                   Table table, ObjectNode objectNode,
+                                   ObjectMapper mapper) {
+        int cardAttackerId = Utility.getPlayerId(cardAttackerCoordinates.getX());
+        int cardAttackedId = cardAttackerId == 1 ? 2 : 1;
+
+        if(isFrozen) {
+            useAttackHeroFailed(cardAttackerCoordinates, "Attacker card is frozen.", objectNode, mapper);
+            return false;
+        }
+
+        if(hasAttacked || hasUsedAbility) {
+            useAttackHeroFailed(cardAttackerCoordinates, "Attacker card has already attacked this turn.",
+                    objectNode, mapper);
+            return false;
+        }
+
+        if(table.checkForTankCards(cardAttackedId) && !getName().equals("Goliath") &&
+                !getName().equals("Warden")) {
+            useAttackHeroFailed(cardAttackerCoordinates, "Attacked card is not of type 'Tank'.",
+                    objectNode, mapper);
+            return false;
+        }
+
+        useAttackHeroSuccess(heroAttacked, cardAttackerId, objectNode);
+        return true;
+    }
+
+    public boolean isOpponentRow(int affectedRow, int currentPlayerTurn) {
+        if(currentPlayerTurn == 1 && affectedRow != 0 && affectedRow != 1) {
+            return false;
+        }
+        if(currentPlayerTurn == 2 && affectedRow != 2 && affectedRow != 3) {
+            return false;
+        }
+        return true;
+    }
+
+    public void useHeroAbilityFailed(int affectedRow, String message,
+                                    ObjectNode objectNode) {
+        objectNode.put("command", "useHeroAbility");
+        objectNode.put("affectedRow", affectedRow);
+        objectNode.put("error", message);
+    }
+
+    public void useHeroAbilitySuccess(int affectedRow, int currentPlayerTurn,
+                                      Player player,
+                                      Table table) {
+        player.setMana(player.getMana() - getMana());
+        if(getName().equals("Lord Royce")) {
+            for(int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
+                CardInput currentCard = table.getTableCards().get(affectedRow).get(i);
+                currentCard.setIsFrozen(true);
+            }
+        }
+        if(getName().equals(("Empress Thorina"))) {
+            int highestHealth = -1;
+            int highestHealthIdx = -1;
+            System.out.println("size= " + table.getTableCards().get(affectedRow).size());
+            for(int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
+                int currentCardHealth = table.getTableCards().get(affectedRow).get(i).getHealth();
+                if(currentCardHealth > highestHealth) {
+                    highestHealth = currentCardHealth;
+                    highestHealthIdx = i;
+                    System.out.println(highestHealthIdx);
+                }
+            }
+            System.out.println(highestHealthIdx + "\n");
+            table.getTableCards().get(affectedRow).remove(highestHealthIdx);
+        }
+        if(getName().equals("King Mudface")) {
+            for(int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
+                CardInput currentCard = table.getTableCards().get(affectedRow).get(i);
+                currentCard.setHealth(currentCard.getHealth() + 1);
+            }
+        }
+        if(getName().equals("General Kocioraw")) {
+            for(int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
+                CardInput currentCard = table.getTableCards().get(affectedRow).get(i);
+                currentCard.setAttackDamage(currentCard.getAttackDamage() + 1);
+            }
+        }
+
+    }
+
+    public boolean useHeroAbility(int affectedRow, int currentPlayerTurn,
+                                  Player player,
+                                  Table table, ObjectNode objectNode,
+                                  ObjectMapper mapper) {
+
+        if(player.getMana() < getMana()) {
+            useHeroAbilityFailed(affectedRow, "Not enough mana to use hero's ability.",
+                    objectNode);
+            return false;
+        }
+
+        if(hasAttacked) {
+            useHeroAbilityFailed(affectedRow, "Hero has already attacked this turn.",
+                    objectNode);
+            return false;
+        }
+
+        if((getName().equals("Lord Royce") || getName().equals("Empress Thorina")) &&
+            !isOpponentRow(affectedRow, currentPlayerTurn)) {
+            useHeroAbilityFailed(affectedRow, "Selected row does not belong to the enemy.",
+                    objectNode);
+            return false;
+        }
+
+        if((getName().equals("General Kocioraw") || getName().equals("King Mudface")) &&
+                isOpponentRow(affectedRow, currentPlayerTurn)) {
+            useHeroAbilityFailed(affectedRow, "Selected row does not belong to the current player.",
+                    objectNode);
+            return false;
+        }
+
+        useHeroAbilitySuccess(affectedRow, currentPlayerTurn, player, table);
+        return true;
+    }
+
 
     public int getMana() {
         return mana;

@@ -112,11 +112,12 @@ public class Player {
         }
     }
 
-    int getPlayerMana() {
-        return this.mana;
+
+    public int getMana() {
+        return mana;
     }
 
-
-
-
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
 }

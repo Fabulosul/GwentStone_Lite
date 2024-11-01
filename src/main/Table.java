@@ -39,13 +39,40 @@ public class Table {
         ArrayNode cardsOnTable = mapper.createArrayNode();
 
         for (int i = 0; i < 4; i++) {
-            ArrayNode playerRowObjArr = mapper.createArrayNode();
+            ArrayNode RowObjArr = mapper.createArrayNode();
             for (int j = 0; j <  tableCards.get(i).size(); j++) {
-                    playerRowObjArr.add(createCardObject(mapper, tableCards.get(i).get(j)));
+                    RowObjArr.add(createCardObject(mapper, tableCards.get(i).get(j)));
             }
-            cardsOnTable.add(playerRowObjArr);
+            cardsOnTable.add(RowObjArr);
         }
         return cardsOnTable;
+    }
+
+    public boolean containsFrozenCards(int Row) {
+        for (int j = 0; j < getTableCards().get(Row).size(); j++) {
+            if(getTableCards().get(Row).get(j).getIsFrozen()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayNode getFrozenCardsOnTable(ObjectNode objectNode, ObjectMapper mapper) {
+        objectNode.put("command", "getFrozenCardsOnTable");
+        ArrayNode frozenCardsOnTable = mapper.createArrayNode();
+
+        for (int i = 0; i < 4; i++) {
+            if(containsFrozenCards(i)){
+                ArrayNode RowObjArr = mapper.createArrayNode();
+                for (int j = 0; j <  tableCards.get(i).size(); j++) {
+                    if(tableCards.get(i).get(j).getIsFrozen()) {
+                        RowObjArr.add(createCardObject(mapper, tableCards.get(i).get(j)));
+                    }
+                }
+                frozenCardsOnTable.add(RowObjArr);
+            }
+        }
+        return frozenCardsOnTable;
     }
 
     public boolean checkForTankCards(int playerIdx) {
