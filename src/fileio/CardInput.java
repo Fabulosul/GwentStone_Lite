@@ -36,25 +36,15 @@ public final class CardInput {
         this.name = card.name;
     }
 
-
     public void cardUsesAttackFailed(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
                                            String message, ObjectNode objectNode, ObjectMapper mapper) {
         objectNode.put("command", "cardUsesAttack");
-
-        ObjectNode attackerCoordinates = mapper.createObjectNode();
-        attackerCoordinates.put("x", cardAttackerCoordinates.getX());
-        attackerCoordinates.put("y", cardAttackerCoordinates.getY());
-        objectNode.set("cardAttacker", attackerCoordinates);
-
-        ObjectNode attackedCoordinates = mapper.createObjectNode();
-        attackedCoordinates.put("x", cardAttackedCoordinates.getX());
-        attackedCoordinates.put("y", cardAttackedCoordinates.getY());
-        objectNode.set("cardAttacked", attackedCoordinates);
-        objectNode.put("error", message);
+        cardUseAction(cardAttackerCoordinates, cardAttackedCoordinates, message, objectNode, mapper);
     }
 
 
-       public boolean cardUsesAttack(CardInput cardAttacked, Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
+       public boolean cardUsesAttack(CardInput cardAttacked, Coordinates cardAttackerCoordinates,
+                                     Coordinates cardAttackedCoordinates,
                                Table table, ObjectNode objectNode,
                                ObjectMapper mapper) {
 
@@ -67,7 +57,7 @@ public final class CardInput {
             return false;
         }
 
-        if(hasAttacked) {
+        if(hasUsedAbility || hasAttacked) {
             cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacker card has already attacked this turn.", objectNode, mapper);
             return false;
@@ -82,7 +72,7 @@ public final class CardInput {
         if(table.checkForTankCards(cardAttackedId)) { // check if there is any tank card
             if(cardAttackedCoordinates.getX() != 1 && cardAttackedCoordinates.getX() != 2) { // the card is not tank
                 cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
-                        "Attacked card is not of type 'Tank’.", objectNode, mapper);
+                        "Attacked card is not of type 'Tank'.", objectNode, mapper);
                 return false;
             }
         }
@@ -94,6 +84,100 @@ public final class CardInput {
             row.remove(cardAttackedCoordinates.getY());
        }
        return true;
+    }
+
+    public void cardUsesAbilityFailed(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
+                                     String message, ObjectNode objectNode, ObjectMapper mapper) {
+        objectNode.put("command", "cardUsesAbility");
+        cardUseAction(cardAttackerCoordinates, cardAttackedCoordinates, message, objectNode, mapper);
+    }
+
+    private void cardUseAction(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates, String message, ObjectNode objectNode, ObjectMapper mapper) {
+        ObjectNode attackerCoordinates = mapper.createObjectNode();
+        attackerCoordinates.put("x", cardAttackerCoordinates.getX());
+        attackerCoordinates.put("y", cardAttackerCoordinates.getY());
+        objectNode.set("cardAttacker", attackerCoordinates);
+
+        ObjectNode attackedCoordinates = mapper.createObjectNode();
+        attackedCoordinates.put("x", cardAttackedCoordinates.getX());
+        attackedCoordinates.put("y", cardAttackedCoordinates.getY());
+        objectNode.set("cardAttacked", attackedCoordinates);
+        objectNode.put("error", message);
+    }
+
+    public void cardUsesAbilitySuccess(CardInput cardAttacked,
+                                       Coordinates cardAttackedCoordinates,
+                                       Table table) {
+        hasUsedAbility = true;
+        if(getName().equals("The Ripper")) {
+            if(cardAttacked.getAttackDamage() < 2) {
+                cardAttacked.setAttackDamage(0);
+            } else {
+                cardAttacked.setAttackDamage(cardAttacked.getAttackDamage() - 2);
+            }
+        }
+        if(getName().equals("Miraj")) {
+            int cardAttackerHealth = getHealth();
+            setHealth(cardAttacked.getHealth());
+            cardAttacked.setHealth(cardAttackerHealth);
+        }
+        if(getName().equals("The Cursed One")) {
+            if(cardAttacked.getAttackDamage() == 0) {
+                table.getTableCards().get(cardAttackedCoordinates.getX()).remove(cardAttackedCoordinates.getY());
+            } else {
+                int cardAttackedHealth = cardAttacked.getHealth();
+                cardAttacked.setHealth(cardAttacked.getAttackDamage());
+                cardAttacked.setAttackDamage(cardAttackedHealth);
+            }
+        }
+        if(getName().equals("Disciple")) {
+                int cardHealth = cardAttacked.getHealth();
+                cardAttacked.setHealth(cardHealth + 2);
+        }
+    }
+
+    public boolean cardUsesAbility(CardInput cardAttacked, Coordinates cardAttackerCoordinates,
+                                   Coordinates cardAttackedCoordinates,
+                                   Table table, ObjectNode objectNode,
+                                   ObjectMapper mapper) {
+
+        int cardAttackerId = Utility.getPlayerId(cardAttackerCoordinates.getX());
+        int cardAttackedId = Utility.getPlayerId(cardAttackedCoordinates.getX());
+
+        if(isFrozen) {
+            cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                    "Attacker card is frozen.", objectNode, mapper);
+            return false;
+        }
+
+        if(hasUsedAbility || hasAttacked) {
+            cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                    "Attacker card has already attacked this turn.", objectNode, mapper);
+            return false;
+        }
+
+        if(getName().equals("Disciple") && cardAttackerId != cardAttackedId) {
+            cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                        "Attacked card does not belong to the current player.", objectNode, mapper);
+            return false;
+        }
+
+        if((getName().equals("The Ripper") || getName().equals("Miraj") || getName().equals("The Cursed One"))) {
+            if(cardAttackerId == cardAttackedId) {
+                cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                        "Attacked card does not belong to the enemy.", objectNode, mapper);
+                return false;
+            }
+            if(table.checkForTankCards(cardAttackedId) && !cardAttacked.getName().equals("Goliath") &&
+                !cardAttacked.getName().equals("Warden")) {
+                cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                        "Attacked card is not of type 'Tank'.", objectNode, mapper);
+                return false;
+            }
+        }
+        cardUsesAbilitySuccess(cardAttacked, cardAttackedCoordinates, table);
+
+        return true;
     }
 
     public int getMana() {

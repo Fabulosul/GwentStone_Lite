@@ -146,7 +146,6 @@ public final class Main {
                     }
                 }
                 if(command.getCommand().equals("cardUsesAttack")) {
-                    System.out.println("cardUsesAttack" + i + " " + j + " " + inputData.getGames().get(i).getActions().get(j).getCardAttacker().getX() + " " + inputData.getGames().get(i).getActions().get(j).getCardAttacker().getY() + " " + inputData.getGames().get(i).getActions().get(j).getCardAttacked().getX() + " " + inputData.getGames().get(i).getActions().get(j).getCardAttacked().getY());
                     Coordinates cardAttackerCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacker();
                     Coordinates cardAttackedCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacked();
 
@@ -158,6 +157,21 @@ public final class Main {
                     if(!hasAttacked) {
                         output.add(objectNode);
                     }
+                }
+                if(command.getCommand().equals("cardUsesAbility")) {
+                    Coordinates cardAttackerCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacker();
+                    Coordinates cardAttackedCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacked();
+
+                    CardInput cardAttacker = table.getTableCards().get(cardAttackerCoordinates.getX()).get(cardAttackerCoordinates.getY());
+                    CardInput cardAttacked = table.getTableCards().get(cardAttackedCoordinates.getX()).get(cardAttackedCoordinates.getY());
+
+                    boolean hasUsedAbility = cardAttacker.cardUsesAbility(cardAttacked, cardAttackerCoordinates, cardAttackedCoordinates,
+                            table, objectNode, mapper);
+
+                    if(!hasUsedAbility) {
+                        output.add(objectNode);
+                    }
+
                 }
                 if(command.getCommand().equals("getCardAtPosition")) {
                     int cardRow = inputData.getGames().get(i).getActions().get(j).getX();
@@ -222,7 +236,6 @@ public final class Main {
                     output.add(objectNode);
                 }
             }
-            System.out.println("Game ended");
         }
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
