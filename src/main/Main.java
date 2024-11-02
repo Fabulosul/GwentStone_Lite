@@ -9,6 +9,7 @@ import checker.CheckerConstants;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.CardInput;
 import fileio.Coordinates;
+import fileio.DecksInput;
 import fileio.Input;
 
 import java.io.File;
@@ -102,13 +103,13 @@ public final class Main {
            int shuffleSeed = inputData.getGames().get(i).getStartGame().getShuffleSeed();
            int startingPlayer = inputData.getGames().get(i).getStartGame().getStartingPlayer();
 
-           ArrayList<CardInput> playerOneDeck = Utility.chooseDeck(playerOneDeckIdx,
+           ArrayList<CardInput> playerOneDeck = DecksInput.chooseDeck(playerOneDeckIdx,
                    inputData.getPlayerOneDecks().getDecks());
-           ArrayList<CardInput> playerTwoDeck = Utility.chooseDeck(playerTwoDeckIdx,
+           ArrayList<CardInput> playerTwoDeck = DecksInput.chooseDeck(playerTwoDeckIdx,
                    inputData.getPlayerTwoDecks().getDecks());
 
-           ArrayList<CardInput> playerOneShuffledDeck = Utility.shuffleDeck(playerOneDeck, shuffleSeed);
-           ArrayList<CardInput> playerTwoShuffledDeck = Utility.shuffleDeck(playerTwoDeck, shuffleSeed);
+           ArrayList<CardInput> playerOneShuffledDeck = DecksInput.shuffleDeck(playerOneDeck, shuffleSeed);
+           ArrayList<CardInput> playerTwoShuffledDeck = DecksInput.shuffleDeck(playerTwoDeck, shuffleSeed);
 
            CardInput playerOneHero = new CardInput(inputData.getGames().get(i).getStartGame().getPlayerOneHero());
            CardInput playerTwoHero = new CardInput(inputData.getGames().get(i).getStartGame().getPlayerTwoHero());
@@ -182,7 +183,7 @@ public final class Main {
                     Coordinates cardAttackerCoordinates = inputData.getGames().get(i).getActions().get(j).getCardAttacker();
                     CardInput cardAttacker = table.getTableCards().get(cardAttackerCoordinates.getX()).get(cardAttackerCoordinates.getY());
                     boolean hasAttackedHero;
-                    if (Utility.getPlayerId(cardAttackerCoordinates.getX()) == 1) {
+                    if (Player.getPlayerByRow(cardAttackerCoordinates.getX()) == 1) {
                         hasAttackedHero = cardAttacker.useAttackHero(cardAttackerCoordinates, playerTwo.getHero(), table,
                                 objectNode, mapper);
                     } else {
@@ -250,12 +251,12 @@ public final class Main {
                     objectNode.set("output", cardsInHand);
                     output.add(objectNode);
                 }
-                if (command.getCommand().equals("getCardsOnTable")){
+                if (command.getCommand().equals("getCardsOnTable")) {
                     ArrayNode cardsOnTable = table.getCardsOnTable(objectNode, mapper);
                     objectNode.set("output", cardsOnTable);
                     output.add(objectNode);
                 }
-               if (command.getCommand().equals("getFrozenCardsOnTable")){
+               if (command.getCommand().equals("getFrozenCardsOnTable")) {
                    ArrayNode frozenCardsOnTable = table.getFrozenCardsOnTable(objectNode, mapper);
                    objectNode.set("output", frozenCardsOnTable);
                    output.add(objectNode);

@@ -7,13 +7,19 @@ import fileio.CardInput;
 
 import java.util.ArrayList;
 
-public class Table {
+public final class Table {
+    public static final int PLAYER_TWO_BACK_ROW = 0;
+    public static final int PLAYER_TWO_FRONT_ROW = 1;
+    public static final int PLAYER_ONE_FRONT_ROW = 2;
+    public static final int PLAYER_ONE_BACK_ROW = 3;
+    public static final int ROWS = 4;
+    public static final int MAX_CARDS_ON_ROW = 5;
     private ArrayList<ArrayList<CardInput>> tableCards;
 
     public Table() {
         tableCards = new ArrayList<>();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < ROWS; i++) {
             ArrayList<CardInput> row = new ArrayList<>();
             tableCards.add(row);
         }
@@ -38,7 +44,7 @@ public class Table {
         objectNode.put("command", "getCardsOnTable");
         ArrayNode cardsOnTable = mapper.createArrayNode();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < ROWS; i++) {
             ArrayNode rowObjArr = mapper.createArrayNode();
             for (int j = 0; j < tableCards.get(i).size(); j++) {
                     rowObjArr.add(createCardObject(mapper, tableCards.get(i).get(j)));
@@ -47,13 +53,12 @@ public class Table {
         }
         return cardsOnTable;
     }
-
     public ArrayNode getFrozenCardsOnTable(final ObjectNode objectNode,
                                            final ObjectMapper mapper) {
         objectNode.put("command", "getFrozenCardsOnTable");
         ArrayNode frozenCardsOnTable = mapper.createArrayNode();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j <  tableCards.get(i).size(); j++) {
                 if (tableCards.get(i).get(j).getIsFrozen()) {
                     frozenCardsOnTable.add(createCardObject(mapper, tableCards.get(i).get(j)));
@@ -89,7 +94,7 @@ public class Table {
     }
 
     public void resetCardProperties() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < tableCards.get(i).size(); j++) {
                 if (tableCards.get(i).get(j) != null) {
                     this.getTableCards().get(i).get(j).setHasAttacked(false);

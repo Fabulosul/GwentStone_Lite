@@ -6,7 +6,10 @@ import fileio.CardInput;
 
 import java.util.ArrayList;
 
-public class Player {
+public final class Player {
+    public static final int PLAYER_ONE_ID = 1;
+    public static final int PLAYER_TWO_ID = 2;
+    public static final int MAX_CARDS_IN_HAND = 5;
     private int id;
     private int mana;
     private CardInput hero;
@@ -19,7 +22,7 @@ public class Player {
         this.mana = 1;
         this.deck = deck;
         this.hero = hero;
-        this.cardsInHand = new ArrayList<>(5);
+        this.cardsInHand = new ArrayList<>(MAX_CARDS_IN_HAND);
     }
 
     void drawCard() {
@@ -46,29 +49,35 @@ public class Player {
         if (this.cardsInHand.size() <= handIdx) {
             return true;
         }
-        int cardMana = this.cardsInHand.get(handIdx).getMana();;
+        int cardMana = this.cardsInHand.get(handIdx).getMana();
         if (cardMana > this.mana) {
             placeCardFailed(objectNode, handIdx, "Not enough mana to place card on table.");
             return false;
         } else {
-            if (this.id == 1) {
-                if(table.getTableCards().get(3).size() == 5) {
+            if (this.id == PLAYER_ONE_ID) {
+                if (table.getTableCards().get(Table.PLAYER_ONE_BACK_ROW).size()
+                        == Table.MAX_CARDS_ON_ROW) {
                     placeCardFailed(objectNode, handIdx,
                             "Cannot place card on table since row is full.");
                     return false;
                 } else {
                     this.mana = this.mana - cardMana;
-                    table.getTableCards().get(3).add(cardsInHand.get(handIdx));
+                    ArrayList<CardInput> playerOneBackRow
+                            = table.getTableCards().get(Table.PLAYER_ONE_BACK_ROW);
+                    playerOneBackRow.add(cardsInHand.get(handIdx));
                     cardsInHand.remove(handIdx);
                 }
             } else {
-                if (table.getTableCards().get(0).size() == 5) {
+                if (table.getTableCards().get(Table.PLAYER_TWO_BACK_ROW).size()
+                        == Table.MAX_CARDS_ON_ROW) {
                     placeCardFailed(objectNode, handIdx,
                             "Cannot place card on table since row is full.");
                     return false;
                 } else {
                     this.mana = this.mana - cardMana;
-                    table.getTableCards().get(0).add(cardsInHand.get(handIdx));
+                    ArrayList<CardInput> playerTwoBackRow
+                            = table.getTableCards().get(Table.PLAYER_TWO_BACK_ROW);
+                    playerTwoBackRow.add(cardsInHand.get(handIdx));
                     this.cardsInHand.remove(handIdx);
                 }
             }
@@ -78,31 +87,38 @@ public class Player {
 
     private boolean placeCardInFrontRow(final ObjectNode objectNode, final ObjectMapper mapper,
                                         final int handIdx, final Table table) {
-        if (this.cardsInHand.size() <= handIdx)
+        if (this.cardsInHand.size() <= handIdx) {
             return true;
+        }
         int cardMana = this.cardsInHand.get(handIdx).getMana();
         if (cardMana > this.mana) {
             placeCardFailed(objectNode, handIdx, "Not enough mana to place card on table.");
             return false;
         } else {
             if (this.id == 1) {
-                if (table.getTableCards().get(2).size() == 5) {
+                if (table.getTableCards().get(Table.PLAYER_ONE_FRONT_ROW).size()
+                        == Table.MAX_CARDS_ON_ROW) {
                     placeCardFailed(objectNode, handIdx,
                             "Cannot place card on table since row is full.");
                     return false;
                 } else {
                     this.mana = this.mana - cardMana;
-                    table.getTableCards().get(2).add(cardsInHand.get(handIdx));
+                    ArrayList<CardInput> playerOneFrontRow
+                            = table.getTableCards().get(Table.PLAYER_ONE_FRONT_ROW);
+                    playerOneFrontRow.add(cardsInHand.get(handIdx));
                     this.cardsInHand.remove(handIdx);
                 }
             } else {
-                if (table.getTableCards().get(1).size() == 5) {
+                if (table.getTableCards().get(Table.PLAYER_TWO_FRONT_ROW).size()
+                        == Table.MAX_CARDS_ON_ROW) {
                     placeCardFailed(objectNode, handIdx,
                             "Cannot place card on table since row is full.");
                     return false;
                 } else {
                     this.mana = this.mana - cardMana;
-                    table.getTableCards().get(1).add(cardsInHand.get(handIdx));
+                    ArrayList<CardInput> playerTwoFrontRow
+                            = table.getTableCards().get(Table.PLAYER_TWO_FRONT_ROW);
+                    playerTwoFrontRow.add(cardsInHand.get(handIdx));
                     this.cardsInHand.remove(handIdx);
                 }
             }
@@ -119,6 +135,14 @@ public class Player {
             return placeCardInBackRow(objectNode, mapper, handIdx, table);
         } else {
             return placeCardInFrontRow(objectNode, mapper, handIdx, table);
+        }
+    }
+
+    public static int getPlayerByRow(final int row) {
+        if (row == Table.PLAYER_ONE_BACK_ROW || row == Table.PLAYER_ONE_FRONT_ROW) {
+            return 1;
+        } else {
+            return 2;
         }
     }
 

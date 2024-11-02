@@ -1,10 +1,10 @@
 package main;
 
-public class GameStats {
+public final class GameStats {
     private int playerOneWins;
     private int playerTwoWins;
     private int totalGamesPlayed;
-    boolean isGameOver;
+    private boolean isGameOver;
 
     public GameStats() {
         this.playerOneWins = 0;
@@ -16,7 +16,7 @@ public class GameStats {
         return playerOneWins;
     }
 
-    public void setPlayerOneWins(int playerOneWins) {
+    public void setPlayerOneWins(final int playerOneWins) {
         this.playerOneWins = playerOneWins;
     }
 
@@ -24,7 +24,7 @@ public class GameStats {
         return playerTwoWins;
     }
 
-    public void setPlayerTwoWins(int playerTwoWins) {
+    public void setPlayerTwoWins(final int playerTwoWins) {
         this.playerTwoWins = playerTwoWins;
     }
 
@@ -32,7 +32,7 @@ public class GameStats {
         return totalGamesPlayed;
     }
 
-    public void setTotalGamesPlayed(int totalGamesPlayed) {
+    public void setTotalGamesPlayed(final int totalGamesPlayed) {
         this.totalGamesPlayed = totalGamesPlayed;
     }
 
@@ -40,7 +40,7 @@ public class GameStats {
         return isGameOver;
     }
 
-    public void setGameOver(boolean gameOver) {
+    public void setGameOver(final boolean gameOver) {
         isGameOver = gameOver;
     }
 }

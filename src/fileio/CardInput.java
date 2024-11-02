@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import main.Player;
 import main.Table;
-import main.Utility;
 
 import java.util.ArrayList;
 
 public final class CardInput {
+    public static final int INITIAL_HERO_HEALTH = 30;
     private int mana;
     private int attackDamage;
     private int health;
@@ -37,6 +37,14 @@ public final class CardInput {
         this.name = card.name;
     }
 
+    /**
+     *
+     * @param cardAttackerCoordinates - the coordinates of the card that is attacking
+     * @param cardAttackedCoordinates
+     * @param message
+     * @param objectNode
+     * @param mapper
+     */
     public void cardUsesAttackFailed(final Coordinates cardAttackerCoordinates,
                                      final Coordinates cardAttackedCoordinates,
                                      final String message,
@@ -54,8 +62,8 @@ public final class CardInput {
                                      final Table table, final ObjectNode objectNode,
                                      final ObjectMapper mapper) {
 
-        int cardAttackerId = Utility.getPlayerId(cardAttackerCoordinates.getX());
-        int cardAttackedId = Utility.getPlayerId(cardAttackedCoordinates.getX());
+        int cardAttackerId = Player.getPlayerByRow(cardAttackerCoordinates.getX());
+        int cardAttackedId = Player.getPlayerByRow(cardAttackedCoordinates.getX());
 
         if (cardAttackerId == cardAttackedId) {
             cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
@@ -76,8 +84,8 @@ public final class CardInput {
         }
 
         if (table.checkForTankCards(cardAttackedId)) {
-            if (cardAttackedCoordinates.getX() != 1
-                    && cardAttackedCoordinates.getX() != 2) {
+            if (cardAttackedCoordinates.getX() != Table.PLAYER_TWO_FRONT_ROW
+                    && cardAttackedCoordinates.getX() != Table.PLAYER_ONE_FRONT_ROW) {
                 cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                         "Attacked card is not of type 'Tank'.", objectNode, mapper);
                 return false;
@@ -139,7 +147,9 @@ public final class CardInput {
         }
         if (getName().equals("The Cursed One")) {
             if (cardAttacked.getAttackDamage() == 0) {
-                table.getTableCards().get(cardAttackedCoordinates.getX()).remove(cardAttackedCoordinates.getY());
+                ArrayList<CardInput> cardAttackedRow
+                        = table.getTableCards().get(cardAttackedCoordinates.getX());
+                cardAttackedRow.remove(cardAttackedCoordinates.getY());
             } else {
                 int cardAttackedHealth = cardAttacked.getHealth();
                 cardAttacked.setHealth(cardAttacked.getAttackDamage());
@@ -158,8 +168,8 @@ public final class CardInput {
                                    final Table table, final ObjectNode objectNode,
                                    final ObjectMapper mapper) {
 
-        int cardAttackerId = Utility.getPlayerId(cardAttackerCoordinates.getX());
-        int cardAttackedId = Utility.getPlayerId(cardAttackedCoordinates.getX());
+        int cardAttackerId = Player.getPlayerByRow(cardAttackerCoordinates.getX());
+        int cardAttackedId = Player.getPlayerByRow(cardAttackedCoordinates.getX());
 
         if (isFrozen) {
             cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
@@ -216,7 +226,7 @@ public final class CardInput {
         hasAttacked = true;
         if (getAttackDamage() >= heroAttacked.getHealth()) {
             heroAttacked.setHealth(0);
-            if (cardAttackerId == 1) {
+            if (cardAttackerId == Player.PLAYER_ONE_ID) {
                 objectNode.put("gameEnded", "Player one killed the enemy hero.");
             } else {
                 objectNode.put("gameEnded", "Player two killed the enemy hero.");
@@ -230,8 +240,9 @@ public final class CardInput {
                                  final CardInput heroAttacked,
                                  final Table table, final ObjectNode objectNode,
                                  final ObjectMapper mapper) {
-        int cardAttackerId = Utility.getPlayerId(cardAttackerCoordinates.getX());
-        int cardAttackedId = cardAttackerId == 1 ? 2 : 1;
+        int cardAttackerId = Player.getPlayerByRow(cardAttackerCoordinates.getX());
+        int cardAttackedId = cardAttackerId
+                == Player.PLAYER_ONE_ID ? Player.PLAYER_TWO_ID : Player.PLAYER_ONE_ID;
 
         if (isFrozen) {
             useAttackHeroFailed(cardAttackerCoordinates, "Attacker card is frozen.",
@@ -256,10 +267,13 @@ public final class CardInput {
     }
 
     public boolean isOpponentRow(final int affectedRow, final int currentPlayerTurn) {
-        if (currentPlayerTurn == 1 && affectedRow != 0 && affectedRow != 1) {
+        if (currentPlayerTurn == Player.PLAYER_ONE_ID && affectedRow != Table.PLAYER_TWO_BACK_ROW
+                && affectedRow != Table.PLAYER_TWO_FRONT_ROW) {
             return false;
         }
-        return currentPlayerTurn != 2 || affectedRow == 2 || affectedRow == 3;
+        return currentPlayerTurn != Player.PLAYER_TWO_ID
+                || affectedRow == Table.PLAYER_ONE_FRONT_ROW
+                || affectedRow == Table.PLAYER_ONE_BACK_ROW;
     }
 
     public void useHeroAbilityFailed(final int affectedRow, final String message,

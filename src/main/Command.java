@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.CardInput;
 
-public class Command {
+public final class Command {
     private String command;
 
     public Command(final String command) {
@@ -71,9 +71,9 @@ public class Command {
                        final Table table, final GameStats gameStats) {
         game.setTotalTurns(game.getTotalTurns() + 1);
 
-        if (game.getPlayerTurn() == 1) {
-            for (int i = 2; i < 4; i++) {
-                for ( int j = 0; j < table.getTableCards().get(i).size(); j++) {
+        if (game.getPlayerTurn() == Player.PLAYER_ONE_ID) {
+            for (int i = Table.PLAYER_ONE_FRONT_ROW; i <= Table.PLAYER_ONE_BACK_ROW; i++) {
+                for (int j = 0; j < table.getTableCards().get(i).size(); j++) {
                     CardInput currentCard = table.getTableCards().get(i).get(j);
                     if (currentCard.getIsFrozen()) {
                         currentCard.setIsFrozen(false);
@@ -81,8 +81,8 @@ public class Command {
                 }
             }
         } else {
-            for (int i = 0; i < 2; i++) {
-                for ( int j = 0; j < table.getTableCards().get(i).size(); j++) {
+            for (int i = Table.PLAYER_TWO_BACK_ROW; i <= Table.PLAYER_TWO_FRONT_ROW; i++) {
+                for (int j = 0; j < table.getTableCards().get(i).size(); j++) {
                     CardInput currentCard = table.getTableCards().get(i).get(j);
                     if (currentCard.getIsFrozen()) {
                         currentCard.setIsFrozen(false);
@@ -90,7 +90,7 @@ public class Command {
                 }
             }
         }
-        if (!gameStats.isGameOver) {
+        if (!gameStats.isGameOver()) {
             if (game.getPlayerTurn() == 1) {
                 game.setPlayerTurn(2);
             } else {
@@ -98,12 +98,12 @@ public class Command {
             }
             if (game.getTotalTurns() % 2 == 0) {
                 game.setNrRound(game.getNrRound() + 1);
-                if (game.getNrRound() <= 10) {
+                if (game.getNrRound() <= Game.MAX_MANA_PER_ROUND) {
                     playerOne.setMana(playerOne.getMana() + game.getNrRound());
                     playerTwo.setMana(playerTwo.getMana() + game.getNrRound());
                 } else {
-                    playerOne.setMana(playerOne.getMana() + 10);
-                    playerTwo.setMana(playerTwo.getMana() + 10);
+                    playerOne.setMana(playerOne.getMana() + Game.MAX_MANA_PER_ROUND);
+                    playerTwo.setMana(playerTwo.getMana() + Game.MAX_MANA_PER_ROUND);
                 }
                 playerOne.drawCard();
                 playerTwo.drawCard();
