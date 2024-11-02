@@ -25,7 +25,7 @@ public final class CardInput {
         hasUsedAbility = false;
     }
 
-    public CardInput(CardInput card) {
+    public CardInput(final CardInput card) {
         this.mana = card.mana;
         this.attackDamage = card.attackDamage;
         this.health = card.health;
@@ -37,41 +37,47 @@ public final class CardInput {
         this.name = card.name;
     }
 
-    public void cardUsesAttackFailed(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
-                                           String message, ObjectNode objectNode, ObjectMapper mapper) {
+    public void cardUsesAttackFailed(final Coordinates cardAttackerCoordinates,
+                                     final Coordinates cardAttackedCoordinates,
+                                     final String message,
+                                     final ObjectNode objectNode,
+                                     final ObjectMapper mapper) {
         objectNode.put("command", "cardUsesAttack");
-        cardUseAction(cardAttackerCoordinates, cardAttackedCoordinates, message, objectNode, mapper);
+        cardUseAction(cardAttackerCoordinates, cardAttackedCoordinates,
+                message, objectNode, mapper);
     }
 
 
-       public boolean cardUsesAttack(CardInput cardAttacked, Coordinates cardAttackerCoordinates,
-                                     Coordinates cardAttackedCoordinates,
-                               Table table, ObjectNode objectNode,
-                               ObjectMapper mapper) {
+       public boolean cardUsesAttack(final CardInput cardAttacked,
+                                     final Coordinates cardAttackerCoordinates,
+                                     final Coordinates cardAttackedCoordinates,
+                                     final Table table, final ObjectNode objectNode,
+                                     final ObjectMapper mapper) {
 
         int cardAttackerId = Utility.getPlayerId(cardAttackerCoordinates.getX());
         int cardAttackedId = Utility.getPlayerId(cardAttackedCoordinates.getX());
 
-        if(cardAttackerId == cardAttackedId) {
+        if (cardAttackerId == cardAttackedId) {
             cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacked card does not belong to the enemy.", objectNode, mapper);
             return false;
         }
 
-        if(hasUsedAbility || hasAttacked) {
+        if (hasUsedAbility || hasAttacked) {
             cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacker card has already attacked this turn.", objectNode, mapper);
             return false;
         }
 
-        if(isFrozen) {
+        if (isFrozen) {
             cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacker card is frozen.", objectNode, mapper);
             return false;
         }
 
-        if(table.checkForTankCards(cardAttackedId)) { // check if there is any tank card
-            if(cardAttackedCoordinates.getX() != 1 && cardAttackedCoordinates.getX() != 2) { // the card is not tank
+        if (table.checkForTankCards(cardAttackedId)) {
+            if (cardAttackedCoordinates.getX() != 1
+                    && cardAttackedCoordinates.getX() != 2) {
                 cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                         "Attacked card is not of type 'Tank'.", objectNode, mapper);
                 return false;
@@ -88,7 +94,11 @@ public final class CardInput {
     }
 
 
-    private void cardUseAction(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates, String message, ObjectNode objectNode, ObjectMapper mapper) {
+    private void cardUseAction(final Coordinates cardAttackerCoordinates,
+                               final Coordinates cardAttackedCoordinates,
+                               final String message,
+                               final ObjectNode objectNode,
+                               final ObjectMapper mapper) {
         ObjectNode attackerCoordinates = mapper.createObjectNode();
         attackerCoordinates.put("x", cardAttackerCoordinates.getX());
         attackerCoordinates.put("y", cardAttackerCoordinates.getY());
@@ -101,30 +111,34 @@ public final class CardInput {
         objectNode.put("error", message);
     }
 
-    public void cardUsesAbilityFailed(Coordinates cardAttackerCoordinates, Coordinates cardAttackedCoordinates,
-                                      String message, ObjectNode objectNode, ObjectMapper mapper) {
+    public void cardUsesAbilityFailed(final Coordinates cardAttackerCoordinates,
+                                      final Coordinates cardAttackedCoordinates,
+                                      final String message, final ObjectNode objectNode,
+                                      final ObjectMapper mapper) {
         objectNode.put("command", "cardUsesAbility");
-        cardUseAction(cardAttackerCoordinates, cardAttackedCoordinates, message, objectNode, mapper);
+        cardUseAction(cardAttackerCoordinates, cardAttackedCoordinates,
+                message, objectNode, mapper);
     }
 
-    public void cardUsesAbilitySuccess(CardInput cardAttacked,
-                                       Coordinates cardAttackedCoordinates,
-                                       Table table) {
+    public void cardUsesAbilitySuccess(final CardInput cardAttacked,
+                                       final Coordinates cardAttackedCoordinates,
+                                       final Table table) {
+
         hasUsedAbility = true;
-        if(getName().equals("The Ripper")) {
-            if(cardAttacked.getAttackDamage() < 2) {
+        if (getName().equals("The Ripper")) {
+            if (cardAttacked.getAttackDamage() < 2) {
                 cardAttacked.setAttackDamage(0);
             } else {
                 cardAttacked.setAttackDamage(cardAttacked.getAttackDamage() - 2);
             }
         }
-        if(getName().equals("Miraj")) {
+        if (getName().equals("Miraj")) {
             int cardAttackerHealth = getHealth();
             setHealth(cardAttacked.getHealth());
             cardAttacked.setHealth(cardAttackerHealth);
         }
-        if(getName().equals("The Cursed One")) {
-            if(cardAttacked.getAttackDamage() == 0) {
+        if (getName().equals("The Cursed One")) {
+            if (cardAttacked.getAttackDamage() == 0) {
                 table.getTableCards().get(cardAttackedCoordinates.getX()).remove(cardAttackedCoordinates.getY());
             } else {
                 int cardAttackedHealth = cardAttacked.getHealth();
@@ -132,46 +146,49 @@ public final class CardInput {
                 cardAttacked.setAttackDamage(cardAttackedHealth);
             }
         }
-        if(getName().equals("Disciple")) {
+        if (getName().equals("Disciple")) {
                 int cardHealth = cardAttacked.getHealth();
                 cardAttacked.setHealth(cardHealth + 2);
         }
     }
 
-    public boolean cardUsesAbility(CardInput cardAttacked, Coordinates cardAttackerCoordinates,
-                                   Coordinates cardAttackedCoordinates,
-                                   Table table, ObjectNode objectNode,
-                                   ObjectMapper mapper) {
+    public boolean cardUsesAbility(final CardInput cardAttacked,
+                                   final Coordinates cardAttackerCoordinates,
+                                   final Coordinates cardAttackedCoordinates,
+                                   final Table table, final ObjectNode objectNode,
+                                   final ObjectMapper mapper) {
 
         int cardAttackerId = Utility.getPlayerId(cardAttackerCoordinates.getX());
         int cardAttackedId = Utility.getPlayerId(cardAttackedCoordinates.getX());
 
-        if(isFrozen) {
+        if (isFrozen) {
             cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacker card is frozen.", objectNode, mapper);
             return false;
         }
 
-        if(hasUsedAbility || hasAttacked) {
+        if (hasUsedAbility || hasAttacked) {
             cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacker card has already attacked this turn.", objectNode, mapper);
             return false;
         }
 
-        if(getName().equals("Disciple") && cardAttackerId != cardAttackedId) {
+        if (getName().equals("Disciple") && cardAttackerId != cardAttackedId) {
             cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                         "Attacked card does not belong to the current player.", objectNode, mapper);
             return false;
         }
 
-        if((getName().equals("The Ripper") || getName().equals("Miraj") || getName().equals("The Cursed One"))) {
-            if(cardAttackerId == cardAttackedId) {
+        if ((getName().equals("The Ripper") || getName().equals("Miraj")
+                || getName().equals("The Cursed One"))) {
+            if (cardAttackerId == cardAttackedId) {
                 cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                         "Attacked card does not belong to the enemy.", objectNode, mapper);
                 return false;
             }
-            if(table.checkForTankCards(cardAttackedId) && !cardAttacked.getName().equals("Goliath") &&
-                !cardAttacked.getName().equals("Warden")) {
+            if (table.checkForTankCards(cardAttackedId)
+                    && !cardAttacked.getName().equals("Goliath")
+                    && !cardAttacked.getName().equals("Warden")) {
                 cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                         "Attacked card is not of type 'Tank'.", objectNode, mapper);
                 return false;
@@ -182,8 +199,10 @@ public final class CardInput {
         return true;
     }
 
-    public void useAttackHeroFailed(Coordinates cardAttackerCoordinates, String message,
-                                    ObjectNode objectNode, ObjectMapper mapper) {
+    public void useAttackHeroFailed(final Coordinates cardAttackerCoordinates,
+                                    final String message,
+                                    final ObjectNode objectNode,
+                                    final ObjectMapper mapper) {
         objectNode.put("command", "useAttackHero");
         ObjectNode attackerCoordinates = mapper.createObjectNode();
         attackerCoordinates.put("x", cardAttackerCoordinates.getX());
@@ -192,11 +211,12 @@ public final class CardInput {
         objectNode.put("error", message);
     }
 
-    public void useAttackHeroSuccess(CardInput heroAttacked, int cardAttackerId, ObjectNode objectNode) {
+    public void useAttackHeroSuccess(final CardInput heroAttacked, final int cardAttackerId,
+                                     final ObjectNode objectNode) {
         hasAttacked = true;
-        if(getAttackDamage() >= heroAttacked.getHealth()) {
+        if (getAttackDamage() >= heroAttacked.getHealth()) {
             heroAttacked.setHealth(0);
-            if(cardAttackerId == 1) {
+            if (cardAttackerId == 1) {
                 objectNode.put("gameEnded", "Player one killed the enemy hero.");
             } else {
                 objectNode.put("gameEnded", "Player two killed the enemy hero.");
@@ -206,25 +226,26 @@ public final class CardInput {
         }
     }
 
-    public boolean useAttackHero(Coordinates cardAttackerCoordinates, CardInput heroAttacked,
-                                   Table table, ObjectNode objectNode,
-                                   ObjectMapper mapper) {
+    public boolean useAttackHero(final Coordinates cardAttackerCoordinates,
+                                 final CardInput heroAttacked,
+                                 final Table table, final ObjectNode objectNode,
+                                 final ObjectMapper mapper) {
         int cardAttackerId = Utility.getPlayerId(cardAttackerCoordinates.getX());
         int cardAttackedId = cardAttackerId == 1 ? 2 : 1;
 
-        if(isFrozen) {
-            useAttackHeroFailed(cardAttackerCoordinates, "Attacker card is frozen.", objectNode, mapper);
-            return false;
-        }
-
-        if(hasAttacked || hasUsedAbility) {
-            useAttackHeroFailed(cardAttackerCoordinates, "Attacker card has already attacked this turn.",
+        if (isFrozen) {
+            useAttackHeroFailed(cardAttackerCoordinates, "Attacker card is frozen.",
                     objectNode, mapper);
             return false;
         }
 
-        if(table.checkForTankCards(cardAttackedId) && !getName().equals("Goliath") &&
-                !getName().equals("Warden")) {
+        if (hasAttacked || hasUsedAbility) {
+            useAttackHeroFailed(cardAttackerCoordinates,
+                    "Attacker card has already attacked this turn.", objectNode, mapper);
+            return false;
+        }
+
+        if (table.checkForTankCards(cardAttackedId)) {
             useAttackHeroFailed(cardAttackerCoordinates, "Attacked card is not of type 'Tank'.",
                     objectNode, mapper);
             return false;
@@ -234,56 +255,51 @@ public final class CardInput {
         return true;
     }
 
-    public boolean isOpponentRow(int affectedRow, int currentPlayerTurn) {
-        if(currentPlayerTurn == 1 && affectedRow != 0 && affectedRow != 1) {
+    public boolean isOpponentRow(final int affectedRow, final int currentPlayerTurn) {
+        if (currentPlayerTurn == 1 && affectedRow != 0 && affectedRow != 1) {
             return false;
         }
-        if(currentPlayerTurn == 2 && affectedRow != 2 && affectedRow != 3) {
-            return false;
-        }
-        return true;
+        return currentPlayerTurn != 2 || affectedRow == 2 || affectedRow == 3;
     }
 
-    public void useHeroAbilityFailed(int affectedRow, String message,
-                                    ObjectNode objectNode) {
+    public void useHeroAbilityFailed(final int affectedRow, final String message,
+                                    final ObjectNode objectNode) {
         objectNode.put("command", "useHeroAbility");
         objectNode.put("affectedRow", affectedRow);
         objectNode.put("error", message);
     }
 
-    public void useHeroAbilitySuccess(int affectedRow, int currentPlayerTurn,
-                                      Player player,
-                                      Table table) {
+    public void useHeroAbilitySuccess(final int affectedRow,
+                                      final Player player,
+                                      final Table table) {
+        hasAttacked = true;
         player.setMana(player.getMana() - getMana());
-        if(getName().equals("Lord Royce")) {
-            for(int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
-                CardInput currentCard = table.getTableCards().get(affectedRow).get(i);
+        if (getName().equals("Lord Royce")) {
+            for (int j = 0; j < table.getTableCards().get(affectedRow).size(); j++) {
+                CardInput currentCard = table.getTableCards().get(affectedRow).get(j);
                 currentCard.setIsFrozen(true);
             }
         }
-        if(getName().equals(("Empress Thorina"))) {
+        if (getName().equals(("Empress Thorina"))) {
             int highestHealth = -1;
             int highestHealthIdx = -1;
-            System.out.println("size= " + table.getTableCards().get(affectedRow).size());
-            for(int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
+            for (int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
                 int currentCardHealth = table.getTableCards().get(affectedRow).get(i).getHealth();
-                if(currentCardHealth > highestHealth) {
+                if (currentCardHealth > highestHealth) {
                     highestHealth = currentCardHealth;
                     highestHealthIdx = i;
-                    System.out.println(highestHealthIdx);
                 }
             }
-            System.out.println(highestHealthIdx + "\n");
             table.getTableCards().get(affectedRow).remove(highestHealthIdx);
         }
-        if(getName().equals("King Mudface")) {
-            for(int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
+        if (getName().equals("King Mudface")) {
+            for (int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
                 CardInput currentCard = table.getTableCards().get(affectedRow).get(i);
                 currentCard.setHealth(currentCard.getHealth() + 1);
             }
         }
-        if(getName().equals("General Kocioraw")) {
-            for(int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
+        if (getName().equals("General Kocioraw")) {
+            for (int i = 0; i < table.getTableCards().get(affectedRow).size(); i++) {
                 CardInput currentCard = table.getTableCards().get(affectedRow).get(i);
                 currentCard.setAttackDamage(currentCard.getAttackDamage() + 1);
             }
@@ -291,38 +307,38 @@ public final class CardInput {
 
     }
 
-    public boolean useHeroAbility(int affectedRow, int currentPlayerTurn,
-                                  Player player,
-                                  Table table, ObjectNode objectNode,
-                                  ObjectMapper mapper) {
+    public boolean useHeroAbility(final int affectedRow, final int currentPlayerTurn,
+                                  final Player player, final Table table,
+                                  final ObjectNode objectNode,
+                                  final ObjectMapper mapper) {
 
-        if(player.getMana() < getMana()) {
+        if (player.getMana() < getMana()) {
             useHeroAbilityFailed(affectedRow, "Not enough mana to use hero's ability.",
                     objectNode);
             return false;
         }
 
-        if(hasAttacked) {
+        if (hasAttacked) {
             useHeroAbilityFailed(affectedRow, "Hero has already attacked this turn.",
                     objectNode);
             return false;
         }
 
-        if((getName().equals("Lord Royce") || getName().equals("Empress Thorina")) &&
-            !isOpponentRow(affectedRow, currentPlayerTurn)) {
+        if ((getName().equals("Lord Royce") || getName().equals("Empress Thorina"))
+                && !isOpponentRow(affectedRow, currentPlayerTurn)) {
             useHeroAbilityFailed(affectedRow, "Selected row does not belong to the enemy.",
                     objectNode);
             return false;
         }
 
-        if((getName().equals("General Kocioraw") || getName().equals("King Mudface")) &&
-                isOpponentRow(affectedRow, currentPlayerTurn)) {
-            useHeroAbilityFailed(affectedRow, "Selected row does not belong to the current player.",
-                    objectNode);
+        if ((getName().equals("General Kocioraw") || getName().equals("King Mudface"))
+                && isOpponentRow(affectedRow, currentPlayerTurn)) {
+            useHeroAbilityFailed(affectedRow,
+                    "Selected row does not belong to the current player.", objectNode);
             return false;
         }
 
-        useHeroAbilitySuccess(affectedRow, currentPlayerTurn, player, table);
+        useHeroAbilitySuccess(affectedRow, player, table);
         return true;
     }
 
@@ -375,11 +391,11 @@ public final class CardInput {
         this.name = name;
     }
 
-    public boolean isHasAttacked() {
+    public boolean hasAttacked() {
         return hasAttacked;
     }
 
-    public void setHasAttacked(boolean hasAttacked) {
+    public void setHasAttacked(final boolean hasAttacked) {
         this.hasAttacked = hasAttacked;
     }
 
@@ -387,7 +403,7 @@ public final class CardInput {
         return isFrozen;
     }
 
-    public void setIsFrozen(boolean isFrozen) {
+    public void setIsFrozen(final boolean isFrozen) {
         this.isFrozen = isFrozen;
     }
 
@@ -395,7 +411,7 @@ public final class CardInput {
         return hasUsedAbility;
     }
 
-    public void setHasUsedAbility(boolean hasUsedAbility) {
+    public void setHasUsedAbility(final boolean hasUsedAbility) {
         this.hasUsedAbility = hasUsedAbility;
     }
 

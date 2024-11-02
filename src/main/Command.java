@@ -8,84 +8,129 @@ import fileio.CardInput;
 public class Command {
     private String command;
 
-    public Command(String command) {
+    public Command(final String command) {
         this.command = command;
     }
 
-    ArrayNode getPlayerDeck(ObjectNode objectNode, ObjectMapper mapper, Player player) {
+    ArrayNode getPlayerDeck(final ObjectNode objectNode, final ObjectMapper mapper,
+                            final Player player) {
         objectNode.put("command", "getPlayerDeck");
-        objectNode.put("playerIdx", player.id);
+        objectNode.put("playerIdx", player.getId());
         ArrayNode deck = mapper.createArrayNode();
-        for(int i = 0; i < player.deck.size(); i++) {
+        for (int i = 0; i < player.getDeck().size(); i++) {
             ObjectNode card = mapper.createObjectNode();
-            card.put("mana", player.deck.get(i).getMana());
-            card.put("attackDamage", player.deck.get(i).getAttackDamage());
-            card.put("health", player.deck.get(i).getHealth());
-            card.put("description", player.deck.get(i).getDescription());
+            card.put("mana", player.getDeck().get(i).getMana());
+            card.put("attackDamage", player.getDeck().get(i).getAttackDamage());
+            card.put("health", player.getDeck().get(i).getHealth());
+            card.put("description", player.getDeck().get(i).getDescription());
             ArrayNode colors = mapper.createArrayNode();
-            for(int j = 0; j < player.deck.get(i).getColors().size(); j++) {
-                colors.add(player.deck.get(i).getColors().get(j));
+            for (int j = 0; j < player.getDeck().get(i).getColors().size(); j++) {
+                colors.add(player.getDeck().get(i).getColors().get(j));
             }
             card.set("colors", colors);
-            card.put("name", player.deck.get(i).getName());
+            card.put("name", player.getDeck().get(i).getName());
             deck.add(card);
         }
         return deck;
     }
 
-    ObjectNode getPlayerHero(ObjectNode objectNode, ObjectMapper mapper, Player player) {
+    ObjectNode getPlayerHero(final ObjectNode objectNode, final ObjectMapper mapper,
+                             final Player player) {
         objectNode.put("command", "getPlayerHero");
-        objectNode.put("playerIdx", player.id);
+        objectNode.put("playerIdx", player.getId());
         ObjectNode hero = mapper.createObjectNode();
-        hero.put("mana", player.hero.getMana());
-        hero.put("description", player.hero.getDescription());
+        hero.put("mana", player.getHero().getMana());
+        hero.put("description", player.getHero().getDescription());
         ArrayNode colors = mapper.createArrayNode();
-        for(int j = 0; j < player.hero.getColors().size(); j++) {
-            colors.add(player.hero.getColors().get(j));
+        for (int j = 0; j < player.getHero().getColors().size(); j++) {
+            colors.add(player.getHero().getColors().get(j));
         }
         hero.set("colors", colors);
-        hero.put("name", player.hero.getName());
-        hero.put("health", player.hero.getHealth());
+        hero.put("name", player.getHero().getName());
+        hero.put("health", player.getHero().getHealth());
         return hero;
     }
 
-    int getPlayerTurn(Game game) {
+    int getPlayerTurn(final Game game) {
         return game.getPlayerTurn();
     }
 
-    void endPlayerTurn(Game game, Player playerOne, Player playerTwo, Table table) {
+    int getPlayerOneWins(final GameStats gameStats) {
+        return gameStats.getPlayerOneWins();
+    }
+
+    int getPlayerTwoWins(final GameStats gameStats) {
+        return gameStats.getPlayerTwoWins();
+    }
+
+    int getTotalGamesPlayed(final GameStats gameStats) {
+        return gameStats.getTotalGamesPlayed();
+    }
+
+    void endPlayerTurn(final Game game, final Player playerOne, final Player playerTwo,
+                       final Table table, final GameStats gameStats) {
         game.setTotalTurns(game.getTotalTurns() + 1);
-        if(game.getPlayerTurn() == 1) {
-            game.setPlayerTurn(2);
+
+        if (game.getPlayerTurn() == 1) {
+            for (int i = 2; i < 4; i++) {
+                for ( int j = 0; j < table.getTableCards().get(i).size(); j++) {
+                    CardInput currentCard = table.getTableCards().get(i).get(j);
+                    if (currentCard.getIsFrozen()) {
+                        currentCard.setIsFrozen(false);
+                    }
+                }
+            }
         } else {
-            game.setPlayerTurn(1);
+            for (int i = 0; i < 2; i++) {
+                for ( int j = 0; j < table.getTableCards().get(i).size(); j++) {
+                    CardInput currentCard = table.getTableCards().get(i).get(j);
+                    if (currentCard.getIsFrozen()) {
+                        currentCard.setIsFrozen(false);
+                    }
+                }
+            }
         }
-        if(game.getTotalTurns() % 2 == 0) {
-            game.setNrRound(game.getNrRound() + 1);
-            playerOne.mana += game.getNrRound();
-            playerTwo.mana += game.getNrRound();
-            playerOne.drawCard();
-            playerTwo.drawCard();
-            table.resetCardProperties();
+        if (!gameStats.isGameOver) {
+            if (game.getPlayerTurn() == 1) {
+                game.setPlayerTurn(2);
+            } else {
+                game.setPlayerTurn(1);
+            }
+            if (game.getTotalTurns() % 2 == 0) {
+                game.setNrRound(game.getNrRound() + 1);
+                if (game.getNrRound() <= 10) {
+                    playerOne.setMana(playerOne.getMana() + game.getNrRound());
+                    playerTwo.setMana(playerTwo.getMana() + game.getNrRound());
+                } else {
+                    playerOne.setMana(playerOne.getMana() + 10);
+                    playerTwo.setMana(playerTwo.getMana() + 10);
+                }
+                playerOne.drawCard();
+                playerTwo.drawCard();
+                playerOne.getHero().setHasAttacked(false);
+                playerTwo.getHero().setHasAttacked(false);
+                table.resetCardProperties();
+            }
         }
     }
 
-    ArrayNode getCardsInHand(ObjectNode objectNode, ObjectMapper mapper, Player player) {
+    ArrayNode getCardsInHand(final ObjectNode objectNode, final ObjectMapper mapper,
+                             final Player player) {
         objectNode.put("command", "getCardsInHand");
-        objectNode.put("playerIdx", player.id);
+        objectNode.put("playerIdx", player.getId());
         ArrayNode cardsInHand = mapper.createArrayNode();
-        for(int i = 0; i < player.cardsInHand.size(); i++) {
+        for (int i = 0; i < player.getCardsInHand().size(); i++) {
             ObjectNode card = mapper.createObjectNode();
-            card.put("mana", player.cardsInHand.get(i).getMana());
-            card.put("attackDamage", player.cardsInHand.get(i).getAttackDamage());
-            card.put("health", player.cardsInHand.get(i).getHealth());
-            card.put("description", player.cardsInHand.get(i).getDescription());
+            card.put("mana", player.getCardsInHand().get(i).getMana());
+            card.put("attackDamage", player.getCardsInHand().get(i).getAttackDamage());
+            card.put("health", player.getCardsInHand().get(i).getHealth());
+            card.put("description", player.getCardsInHand().get(i).getDescription());
             ArrayNode colors = mapper.createArrayNode();
-            for(int j = 0; j < player.cardsInHand.get(i).getColors().size(); j++) {
-                colors.add(player.cardsInHand.get(i).getColors().get(j));
+            for (int j = 0; j < player.getCardsInHand().get(i).getColors().size(); j++) {
+                colors.add(player.getCardsInHand().get(i).getColors().get(j));
             }
             card.set("colors", colors);
-            card.put("name", player.cardsInHand.get(i).getName());
+            card.put("name", player.getCardsInHand().get(i).getName());
             cardsInHand.add(card);
         }
         return cardsInHand;
@@ -95,7 +140,7 @@ public class Command {
         return command;
     }
 
-    public void setCommand(String command) {
+    public void setCommand(final String command) {
         this.command = command;
     }
 }

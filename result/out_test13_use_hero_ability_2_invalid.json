@@ -64,7 +64,7 @@
 }, {
   "command" : "useHeroAbility",
   "affectedRow" : 1,
-  "error" : "Selected row does not belong to the current player."
+  "error" : "Hero has already attacked this turn."
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 1,
