@@ -60,7 +60,7 @@ public final class Table {
 
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j <  tableCards.get(i).size(); j++) {
-                if (tableCards.get(i).get(j).getIsFrozen()) {
+                if (tableCards.get(i).get(j).isFrozen()) {
                     frozenCardsOnTable.add(createCardObject(mapper, tableCards.get(i).get(j)));
                 }
             }

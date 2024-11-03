@@ -17,11 +17,16 @@ public final class Command {
         this.command = command;
     }
 
-    public static ObjectNode createObjectNode() {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.createObjectNode();
-    }
-
+    /**
+     * Method that makes the changes needed at the end of a player's turn.
+     *
+     *
+     * @param game - an instance of the current game
+     * @param playerOne - an instance of the player one
+     * @param playerTwo - an instance of the player two
+     * @param table - the game board where all cards that are placed are stored
+     * @param gameStats - information about the played games
+     */
     public static void endPlayerTurn(final Game game, final Player playerOne,
                                      final Player playerTwo, final Table table,
                                      final GameStats gameStats) {
@@ -31,7 +36,7 @@ public final class Command {
             for (int i = Table.PLAYER_ONE_FRONT_ROW; i <= Table.PLAYER_ONE_BACK_ROW; i++) {
                 for (int j = 0; j < table.getTableCards().get(i).size(); j++) {
                     CardInput currentCard = table.getTableCards().get(i).get(j);
-                    if (currentCard.getIsFrozen()) {
+                    if (currentCard.isFrozen()) {
                         currentCard.setIsFrozen(false);
                     }
                 }
@@ -40,17 +45,17 @@ public final class Command {
             for (int i = Table.PLAYER_TWO_BACK_ROW; i <= Table.PLAYER_TWO_FRONT_ROW; i++) {
                 for (int j = 0; j < table.getTableCards().get(i).size(); j++) {
                     CardInput currentCard = table.getTableCards().get(i).get(j);
-                    if (currentCard.getIsFrozen()) {
+                    if (currentCard.isFrozen()) {
                         currentCard.setIsFrozen(false);
                     }
                 }
             }
         }
         if (!gameStats.isGameOver()) {
-            if (game.getPlayerTurn() == 1) {
-                game.setPlayerTurn(2);
+            if (game.getPlayerTurn() == Player.PLAYER_ONE_ID) {
+                game.setPlayerTurn(Player.PLAYER_TWO_ID);
             } else {
-                game.setPlayerTurn(1);
+                game.setPlayerTurn(Player.PLAYER_ONE_ID);
             }
             if (game.getTotalTurns() % 2 == 0) {
                 game.setNrRound(game.getNrRound() + 1);

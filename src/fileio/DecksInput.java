@@ -12,6 +12,15 @@ public final class DecksInput {
     public DecksInput() {
     }
 
+    /**
+     * Method that chooses the deck used for the current game.
+     * It creates a deep copy of the deck placed on the position given by the index parameter
+     * using a copy constructor in the CardInput class.
+     *
+     * @param playerDeckIdx - the index of the deck used for the current game
+     * @param decks - all the decks available
+     * @return the deck chosen for the current game
+     */
     public static ArrayList<CardInput> chooseDeck(final int playerDeckIdx,
                                                   final ArrayList<ArrayList<CardInput>> decks) {
         ArrayList<CardInput> currentDeck = new ArrayList<>();
@@ -21,7 +30,15 @@ public final class DecksInput {
         return currentDeck;
     }
 
-
+    /**
+     * Method that reorders the cards in a deck using the shuffle method from the Collections class
+     * and the seed given for randomization.
+     * It generates a random object using the seed and mixes the cards using the shuffle method.
+     *
+     * @param deck - the deck to be shuffled
+     * @param seed - the shuffle seed used to mix the cards
+     * @return the shuffled deck
+     */
     public static ArrayList<CardInput> shuffleDeck(final ArrayList<CardInput> deck,
                                                    final int seed) {
         Random random = new Random(seed);
