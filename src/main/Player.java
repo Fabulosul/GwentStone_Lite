@@ -1,7 +1,9 @@
 package main;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import fileio.ActionsInput;
 import fileio.CardInput;
 
 import java.util.ArrayList;
@@ -37,6 +39,64 @@ public final class Player {
                 || card.getName().equals("The Cursed One") || card.getName().equals("Disciple");
     }
 
+    public ArrayNode addCardsInHandToArr(final ObjectNode objectNode, final ObjectMapper mapper) {
+        objectNode.put("command", "getCardsInHand");
+        objectNode.put("playerIdx", getId());
+        ArrayNode cardsInHandArr = mapper.createArrayNode();
+        for (int i = 0; i < getCardsInHand().size(); i++) {
+            ObjectNode card = mapper.createObjectNode();
+            card.put("mana", getCardsInHand().get(i).getMana());
+            card.put("attackDamage", getCardsInHand().get(i).getAttackDamage());
+            card.put("health", getCardsInHand().get(i).getHealth());
+            card.put("description", getCardsInHand().get(i).getDescription());
+            ArrayNode colors = mapper.createArrayNode();
+            for (int j = 0; j < getCardsInHand().get(i).getColors().size(); j++) {
+                colors.add(getCardsInHand().get(i).getColors().get(j));
+            }
+            card.set("colors", colors);
+            card.put("name", getCardsInHand().get(i).getName());
+            cardsInHandArr.add(card);
+        }
+        return cardsInHandArr;
+    }
+
+    public ArrayNode addPlayerDeckToArr(final ObjectNode objectNode, final ObjectMapper mapper) {
+        objectNode.put("command", "getPlayerDeck");
+        objectNode.put("playerIdx", getId());
+        ArrayNode deckArr = mapper.createArrayNode();
+        for (int i = 0; i < getDeck().size(); i++) {
+            ObjectNode card = mapper.createObjectNode();
+            card.put("mana", getDeck().get(i).getMana());
+            card.put("attackDamage", getDeck().get(i).getAttackDamage());
+            card.put("health", getDeck().get(i).getHealth());
+            card.put("description", getDeck().get(i).getDescription());
+            ArrayNode colors = mapper.createArrayNode();
+            for (int j = 0; j < getDeck().get(i).getColors().size(); j++) {
+                colors.add(getDeck().get(i).getColors().get(j));
+            }
+            card.set("colors", colors);
+            card.put("name", getDeck().get(i).getName());
+            deckArr.add(card);
+        }
+        return deckArr;
+    }
+
+    public ObjectNode addPlayerHeroToArr(final ObjectNode objectNode, final ObjectMapper mapper) {
+        objectNode.put("command", "getPlayerHero");
+        objectNode.put("playerIdx", getId());
+        ObjectNode heroObj = mapper.createObjectNode();
+        heroObj.put("mana", getHero().getMana());
+        heroObj.put("description", getHero().getDescription());
+        ArrayNode colors = mapper.createArrayNode();
+        for (int j = 0; j < getHero().getColors().size(); j++) {
+            colors.add(getHero().getColors().get(j));
+        }
+        heroObj.set("colors", colors);
+        heroObj.put("name", getHero().getName());
+        heroObj.put("health", getHero().getHealth());
+        return heroObj;
+    }
+
     private void placeCardFailed(final ObjectNode objectNode, final int handIdx,
                                  final String message) {
         objectNode.put("command", "placeCard");
@@ -46,22 +106,22 @@ public final class Player {
 
     private boolean placeCardInBackRow(final ObjectNode objectNode, final ObjectMapper mapper,
                                        final int handIdx, final Table table) {
-        if (this.cardsInHand.size() <= handIdx) {
+        if (getCardsInHand().size() <= handIdx) {
             return true;
         }
-        int cardMana = this.cardsInHand.get(handIdx).getMana();
-        if (cardMana > this.mana) {
+        int cardMana = getCardsInHand().get(handIdx).getMana();
+        if (cardMana > getMana()) {
             placeCardFailed(objectNode, handIdx, "Not enough mana to place card on table.");
             return false;
         } else {
-            if (this.id == PLAYER_ONE_ID) {
+            if (getId() == PLAYER_ONE_ID) {
                 if (table.getTableCards().get(Table.PLAYER_ONE_BACK_ROW).size()
                         == Table.MAX_CARDS_ON_ROW) {
                     placeCardFailed(objectNode, handIdx,
                             "Cannot place card on table since row is full.");
                     return false;
                 } else {
-                    this.mana = this.mana - cardMana;
+                    setMana(getMana() - cardMana);
                     ArrayList<CardInput> playerOneBackRow
                             = table.getTableCards().get(Table.PLAYER_ONE_BACK_ROW);
                     playerOneBackRow.add(cardsInHand.get(handIdx));
@@ -74,11 +134,11 @@ public final class Player {
                             "Cannot place card on table since row is full.");
                     return false;
                 } else {
-                    this.mana = this.mana - cardMana;
+                    setMana(getMana() - cardMana);
                     ArrayList<CardInput> playerTwoBackRow
                             = table.getTableCards().get(Table.PLAYER_TWO_BACK_ROW);
                     playerTwoBackRow.add(cardsInHand.get(handIdx));
-                    this.cardsInHand.remove(handIdx);
+                    getCardsInHand().remove(handIdx);
                 }
             }
         }
@@ -87,26 +147,26 @@ public final class Player {
 
     private boolean placeCardInFrontRow(final ObjectNode objectNode, final ObjectMapper mapper,
                                         final int handIdx, final Table table) {
-        if (this.cardsInHand.size() <= handIdx) {
+        if (getCardsInHand().size() <= handIdx) {
             return true;
         }
-        int cardMana = this.cardsInHand.get(handIdx).getMana();
-        if (cardMana > this.mana) {
+        int cardMana = getCardsInHand().get(handIdx).getMana();
+        if (cardMana > getMana()) {
             placeCardFailed(objectNode, handIdx, "Not enough mana to place card on table.");
             return false;
         } else {
-            if (this.id == 1) {
+            if (getId() == Player.PLAYER_ONE_ID) {
                 if (table.getTableCards().get(Table.PLAYER_ONE_FRONT_ROW).size()
                         == Table.MAX_CARDS_ON_ROW) {
                     placeCardFailed(objectNode, handIdx,
                             "Cannot place card on table since row is full.");
                     return false;
                 } else {
-                    this.mana = this.mana - cardMana;
+                    setMana(getMana() - cardMana);
                     ArrayList<CardInput> playerOneFrontRow
                             = table.getTableCards().get(Table.PLAYER_ONE_FRONT_ROW);
                     playerOneFrontRow.add(cardsInHand.get(handIdx));
-                    this.cardsInHand.remove(handIdx);
+                    getCardsInHand().remove(handIdx);
                 }
             } else {
                 if (table.getTableCards().get(Table.PLAYER_TWO_FRONT_ROW).size()
@@ -115,23 +175,24 @@ public final class Player {
                             "Cannot place card on table since row is full.");
                     return false;
                 } else {
-                    this.mana = this.mana - cardMana;
+                    setMana(getMana() - cardMana);
                     ArrayList<CardInput> playerTwoFrontRow
                             = table.getTableCards().get(Table.PLAYER_TWO_FRONT_ROW);
                     playerTwoFrontRow.add(cardsInHand.get(handIdx));
-                    this.cardsInHand.remove(handIdx);
+                    getCardsInHand().remove(handIdx);
                 }
             }
         }
         return true;
     }
 
-    boolean placeCard(final ObjectNode objectNode, final ObjectMapper mapper,
-                      final int handIdx, final Table table) {
-        if (this.cardsInHand.size() <= handIdx) {
+    boolean placeCard(final ActionsInput currentAction, final ObjectNode objectNode,
+                      final ObjectMapper mapper, final Table table) {
+        int handIdx = currentAction.getHandIdx();
+        if (getCardsInHand().size() <= handIdx) {
             return true;
         }
-        if (isBackRowCard(this.cardsInHand.get(handIdx))) {
+        if (isBackRowCard(getCardsInHand().get(handIdx))) {
             return placeCardInBackRow(objectNode, mapper, handIdx, table);
         } else {
             return placeCardInFrontRow(objectNode, mapper, handIdx, table);

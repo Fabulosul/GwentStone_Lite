@@ -83,7 +83,7 @@ public final class CardInput {
             return false;
         }
 
-        if (table.checkForTankCards(cardAttackedId)) {
+        if (table.hasTankCards(cardAttackedId)) {
             if (cardAttackedCoordinates.getX() != Table.PLAYER_TWO_FRONT_ROW
                     && cardAttackedCoordinates.getX() != Table.PLAYER_ONE_FRONT_ROW) {
                 cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
@@ -196,7 +196,7 @@ public final class CardInput {
                         "Attacked card does not belong to the enemy.", objectNode, mapper);
                 return false;
             }
-            if (table.checkForTankCards(cardAttackedId)
+            if (table.hasTankCards(cardAttackedId)
                     && !cardAttacked.getName().equals("Goliath")
                     && !cardAttacked.getName().equals("Warden")) {
                 cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
@@ -256,7 +256,7 @@ public final class CardInput {
             return false;
         }
 
-        if (table.checkForTankCards(cardAttackedId)) {
+        if (table.hasTankCards(cardAttackedId)) {
             useAttackHeroFailed(cardAttackerCoordinates, "Attacked card is not of type 'Tank'.",
                     objectNode, mapper);
             return false;
@@ -323,8 +323,7 @@ public final class CardInput {
 
     public boolean useHeroAbility(final int affectedRow, final int currentPlayerTurn,
                                   final Player player, final Table table,
-                                  final ObjectNode objectNode,
-                                  final ObjectMapper mapper) {
+                                  final ObjectNode objectNode) {
 
         if (player.getMana() < getMana()) {
             useHeroAbilityFailed(affectedRow, "Not enough mana to use hero's ability.",

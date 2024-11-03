@@ -40,7 +40,7 @@ public final class Table {
         return cardObject;
     }
 
-    public ArrayNode getCardsOnTable(final ObjectNode objectNode, final ObjectMapper mapper) {
+    public ArrayNode addCardsOnTableToArr(final ObjectNode objectNode, final ObjectMapper mapper) {
         objectNode.put("command", "getCardsOnTable");
         ArrayNode cardsOnTable = mapper.createArrayNode();
 
@@ -53,7 +53,7 @@ public final class Table {
         }
         return cardsOnTable;
     }
-    public ArrayNode getFrozenCardsOnTable(final ObjectNode objectNode,
+    public ArrayNode addFrozenCardsToArr(final ObjectNode objectNode,
                                            final ObjectMapper mapper) {
         objectNode.put("command", "getFrozenCardsOnTable");
         ArrayNode frozenCardsOnTable = mapper.createArrayNode();
@@ -68,7 +68,7 @@ public final class Table {
         return frozenCardsOnTable;
     }
 
-    public boolean checkForTankCards(final int playerIdx) {
+    public boolean hasTankCards(final int playerIdx) {
         if (playerIdx == 1) {
             if (getTableCards().get(2) == null) {
                 System.out.println("is null");
@@ -97,14 +97,14 @@ public final class Table {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < tableCards.get(i).size(); j++) {
                 if (tableCards.get(i).get(j) != null) {
-                    this.getTableCards().get(i).get(j).setHasAttacked(false);
-                    this.getTableCards().get(i).get(j).setHasUsedAbility(false);
+                    getTableCards().get(i).get(j).setHasAttacked(false);
+                    getTableCards().get(i).get(j).setHasUsedAbility(false);
                 }
             }
         }
     }
 
-    public void getCardAtPosition(final Table table, final int cardRow, final int cardColumn,
+    public void addCardAtPosToArr(final Table table, final int cardRow, final int cardColumn,
                                   final ObjectNode objectNode, final ObjectMapper mapper) {
         objectNode.put("command", "getCardAtPosition");
         objectNode.put("x", cardRow);

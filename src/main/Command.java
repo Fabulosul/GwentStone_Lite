@@ -3,7 +3,12 @@ package main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import fileio.ActionsInput;
 import fileio.CardInput;
+import fileio.Coordinates;
+
+import java.util.ArrayList;
+
 
 public final class Command {
     private String command;
@@ -12,63 +17,14 @@ public final class Command {
         this.command = command;
     }
 
-    ArrayNode getPlayerDeck(final ObjectNode objectNode, final ObjectMapper mapper,
-                            final Player player) {
-        objectNode.put("command", "getPlayerDeck");
-        objectNode.put("playerIdx", player.getId());
-        ArrayNode deck = mapper.createArrayNode();
-        for (int i = 0; i < player.getDeck().size(); i++) {
-            ObjectNode card = mapper.createObjectNode();
-            card.put("mana", player.getDeck().get(i).getMana());
-            card.put("attackDamage", player.getDeck().get(i).getAttackDamage());
-            card.put("health", player.getDeck().get(i).getHealth());
-            card.put("description", player.getDeck().get(i).getDescription());
-            ArrayNode colors = mapper.createArrayNode();
-            for (int j = 0; j < player.getDeck().get(i).getColors().size(); j++) {
-                colors.add(player.getDeck().get(i).getColors().get(j));
-            }
-            card.set("colors", colors);
-            card.put("name", player.getDeck().get(i).getName());
-            deck.add(card);
-        }
-        return deck;
+    public static ObjectNode createObjectNode() {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.createObjectNode();
     }
 
-    ObjectNode getPlayerHero(final ObjectNode objectNode, final ObjectMapper mapper,
-                             final Player player) {
-        objectNode.put("command", "getPlayerHero");
-        objectNode.put("playerIdx", player.getId());
-        ObjectNode hero = mapper.createObjectNode();
-        hero.put("mana", player.getHero().getMana());
-        hero.put("description", player.getHero().getDescription());
-        ArrayNode colors = mapper.createArrayNode();
-        for (int j = 0; j < player.getHero().getColors().size(); j++) {
-            colors.add(player.getHero().getColors().get(j));
-        }
-        hero.set("colors", colors);
-        hero.put("name", player.getHero().getName());
-        hero.put("health", player.getHero().getHealth());
-        return hero;
-    }
-
-    int getPlayerTurn(final Game game) {
-        return game.getPlayerTurn();
-    }
-
-    int getPlayerOneWins(final GameStats gameStats) {
-        return gameStats.getPlayerOneWins();
-    }
-
-    int getPlayerTwoWins(final GameStats gameStats) {
-        return gameStats.getPlayerTwoWins();
-    }
-
-    int getTotalGamesPlayed(final GameStats gameStats) {
-        return gameStats.getTotalGamesPlayed();
-    }
-
-    void endPlayerTurn(final Game game, final Player playerOne, final Player playerTwo,
-                       final Table table, final GameStats gameStats) {
+    public static void endPlayerTurn(final Game game, final Player playerOne,
+                                     final Player playerTwo, final Table table,
+                                     final GameStats gameStats) {
         game.setTotalTurns(game.getTotalTurns() + 1);
 
         if (game.getPlayerTurn() == Player.PLAYER_ONE_ID) {
@@ -114,26 +70,267 @@ public final class Command {
         }
     }
 
-    ArrayNode getCardsInHand(final ObjectNode objectNode, final ObjectMapper mapper,
-                             final Player player) {
-        objectNode.put("command", "getCardsInHand");
-        objectNode.put("playerIdx", player.getId());
-        ArrayNode cardsInHand = mapper.createArrayNode();
-        for (int i = 0; i < player.getCardsInHand().size(); i++) {
-            ObjectNode card = mapper.createObjectNode();
-            card.put("mana", player.getCardsInHand().get(i).getMana());
-            card.put("attackDamage", player.getCardsInHand().get(i).getAttackDamage());
-            card.put("health", player.getCardsInHand().get(i).getHealth());
-            card.put("description", player.getCardsInHand().get(i).getDescription());
-            ArrayNode colors = mapper.createArrayNode();
-            for (int j = 0; j < player.getCardsInHand().get(i).getColors().size(); j++) {
-                colors.add(player.getCardsInHand().get(i).getColors().get(j));
-            }
-            card.set("colors", colors);
-            card.put("name", player.getCardsInHand().get(i).getName());
-            cardsInHand.add(card);
+    public static void processPlaceCard(final ActionsInput currentAction, final Game game,
+                                        final Player playerOne, final Player playerTwo,
+                                        final Table table, final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        boolean canPlaceCard;
+        if (game.getPlayerTurn() == Player.PLAYER_ONE_ID) {
+            canPlaceCard = playerOne.placeCard(currentAction, objectNode, mapper, table);
+        } else {
+            canPlaceCard = playerTwo.placeCard(currentAction, objectNode, mapper, table);
         }
-        return cardsInHand;
+        if (!canPlaceCard) {
+            output.add(objectNode);
+        }
+    }
+
+    public static void processCardUsesAttack(final ActionsInput currentAction, final Table table,
+                                             final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        Coordinates cardAttackerCoordinates = currentAction.getCardAttacker();
+        Coordinates cardAttackedCoordinates = currentAction.getCardAttacked();
+
+        ArrayList<CardInput> cardAttackerRow
+                = table.getTableCards().get(cardAttackerCoordinates.getX());
+        CardInput cardAttacker = cardAttackerRow.get(cardAttackerCoordinates.getY());
+
+        ArrayList<CardInput> cardAttackedRow
+                = table.getTableCards().get(cardAttackedCoordinates.getX());
+        CardInput cardAttacked = cardAttackedRow.get(cardAttackedCoordinates.getY());
+
+        boolean hasAttacked = cardAttacker.cardUsesAttack(cardAttacked, cardAttackerCoordinates,
+                cardAttackedCoordinates, table, objectNode, mapper);
+
+        if (!hasAttacked) {
+            output.add(objectNode);
+        }
+    }
+
+    public static void processCardUsesAbility(final ActionsInput currentAction, final Table table,
+                                              final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        Coordinates cardAttackerCoordinates = currentAction.getCardAttacker();
+        Coordinates cardAttackedCoordinates = currentAction.getCardAttacked();
+
+        ArrayList<CardInput> cardAttackerRow
+                = table.getTableCards().get(cardAttackerCoordinates.getX());
+        CardInput cardAttacker = cardAttackerRow.get(cardAttackerCoordinates.getY());
+
+        ArrayList<CardInput> cardAttackedRow
+                = table.getTableCards().get(cardAttackedCoordinates.getX());
+        CardInput cardAttacked = cardAttackedRow.get(cardAttackedCoordinates.getY());
+
+        boolean hasUsedAbility = cardAttacker.cardUsesAbility(cardAttacked,
+                cardAttackerCoordinates, cardAttackedCoordinates,
+                table, objectNode, mapper);
+
+        if (!hasUsedAbility) {
+            output.add(objectNode);
+        }
+    }
+
+    public static void processUseAttackHero(final ActionsInput currentAction, final Table table,
+                                     final Player playerOne, final Player playerTwo,
+                                     final GameStats gameStats,
+                                     final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        Coordinates cardAttackerCoordinates = currentAction.getCardAttacker();
+
+        ArrayList<CardInput> cardAttackerRow
+                = table.getTableCards().get(cardAttackerCoordinates.getX());
+        CardInput cardAttacker = cardAttackerRow.get(cardAttackerCoordinates.getY());
+
+        boolean hasAttackedHero;
+        if (Player.getPlayerByRow(cardAttackerCoordinates.getX()) == 1) {
+            hasAttackedHero = cardAttacker.useAttackHero(cardAttackerCoordinates,
+                    playerTwo.getHero(), table,
+                    objectNode, mapper);
+        } else {
+            hasAttackedHero = cardAttacker.useAttackHero(cardAttackerCoordinates,
+                    playerOne.getHero(), table,
+                    objectNode, mapper);
+        }
+        if (!hasAttackedHero) {
+            output.add(objectNode);
+        }
+        if (playerOne.getHero().getHealth() == 0 && !gameStats.isGameOver()) {
+            output.add(objectNode);
+            gameStats.setPlayerTwoWins(gameStats.getPlayerTwoWins() + 1);
+            gameStats.setTotalGamesPlayed(gameStats.getTotalGamesPlayed() + 1);
+            gameStats.setGameOver(true);
+        }
+        if (playerTwo.getHero().getHealth() == 0 && !gameStats.isGameOver()) {
+            output.add(objectNode);
+            gameStats.setPlayerOneWins(gameStats.getPlayerOneWins() + 1);
+            gameStats.setTotalGamesPlayed(gameStats.getTotalGamesPlayed() + 1);
+            gameStats.setGameOver(true);
+        }
+    }
+
+    public static void processUseHeroAbility(final ActionsInput currentAction, final Game game,
+                                             final Player playerOne, final Player playerTwo,
+                                             final Table table, final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        int affectedRow = currentAction.getAffectedRow();
+        int currentPlayerTurn = game.getPlayerTurn();
+        boolean heroUsedAbility;
+        if (currentPlayerTurn == Player.PLAYER_ONE_ID) {
+            heroUsedAbility = playerOne.getHero().useHeroAbility(affectedRow, currentPlayerTurn,
+                    playerOne, table, objectNode);
+        } else {
+            heroUsedAbility = playerTwo.getHero().useHeroAbility(affectedRow, currentPlayerTurn,
+                    playerTwo, table, objectNode);
+        }
+        if (!heroUsedAbility) {
+            output.add(objectNode);
+        }
+    }
+
+    public static void processGetCardAtPosition(final ActionsInput currentAction, final Table table,
+                                                final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        int cardRow = currentAction.getX();
+        int cardColumn = currentAction.getY();
+
+        table.addCardAtPosToArr(table, cardRow, cardColumn, objectNode, mapper);
+        output.add(objectNode);
+    }
+
+    public static void processGetPlayerMana(final ActionsInput currentAction,
+                                            final Player playerOne, final Player playerTwo,
+                                            final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        int playerIdx = currentAction.getPlayerIdx();
+        objectNode.put("command", "getPlayerMana");
+        if (playerIdx == Player.PLAYER_ONE_ID) {
+            objectNode.put("playerIdx", Player.PLAYER_ONE_ID);
+            objectNode.put("output", playerOne.getMana());
+        } else {
+            objectNode.put("playerIdx", Player.PLAYER_TWO_ID);
+            objectNode.put("output", playerTwo.getMana());
+        }
+        output.add(objectNode);
+    }
+
+    public static void processGetCardsInHand(final ActionsInput currentAction,
+                                             final Player playerOne, final Player playerTwo,
+                                             final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        int playerIdx = currentAction.getPlayerIdx();
+        ArrayNode cardsInHand;
+        if (playerIdx == Player.PLAYER_ONE_ID) {
+            cardsInHand = playerOne.addCardsInHandToArr(objectNode, mapper);
+        } else {
+            cardsInHand = playerTwo.addCardsInHandToArr(objectNode, mapper);
+        }
+        objectNode.set("output", cardsInHand);
+        output.add(objectNode);
+    }
+
+    public static void processGetCardsOnTable(final Table table,
+                                              final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+        ArrayNode cardsOnTable = table.addCardsOnTableToArr(objectNode, mapper);
+        objectNode.set("output", cardsOnTable);
+        output.add(objectNode);
+    }
+
+    public static void processGetFrozenCardsOnTable(final Table table,
+                                              final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+        ArrayNode cardsOnTable = table.addFrozenCardsToArr(objectNode, mapper);
+        objectNode.set("output", cardsOnTable);
+        output.add(objectNode);
+    }
+
+    public static void processGetPlayerDeck(final ActionsInput currentAction,
+                                            final Player playerOne, final Player playerTwo,
+                                            final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        int playerIdx = currentAction.getPlayerIdx();
+        ArrayNode deck;
+        if (playerIdx == Player.PLAYER_ONE_ID) {
+            deck = playerOne.addPlayerDeckToArr(objectNode, mapper);
+        } else {
+            deck = playerTwo.addPlayerDeckToArr(objectNode, mapper);
+        }
+        objectNode.set("output", deck);
+        output.add(objectNode);
+    }
+
+    public static void processGetPlayerHero(final ActionsInput currentAction,
+                                            final Player playerOne, final Player playerTwo,
+                                            final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        int playerIdx = currentAction.getPlayerIdx();
+        ObjectNode hero;
+        if (playerIdx == Player.PLAYER_ONE_ID) {
+            hero = playerOne.addPlayerHeroToArr(objectNode, mapper);
+        } else {
+            hero = playerTwo.addPlayerHeroToArr(objectNode, mapper);
+        }
+        objectNode.set("output", hero);
+        output.add(objectNode);
+    }
+
+    public static void processGetPlayerTurn(final Game game, final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        objectNode.put("command", "getPlayerTurn");
+        objectNode.put("output", game.getPlayerTurn());
+        output.add(objectNode);
+    }
+
+    public static void processGetPlayerOneWins(final GameStats gameStats, final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        objectNode.put("command", "getPlayerOneWins");
+        objectNode.put("output", gameStats.getPlayerOneWins());
+        output.add(objectNode);
+    }
+
+    public static void processGetPlayerTwoWins(final GameStats gameStats, final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        objectNode.put("command", "getPlayerTwoWins");
+        objectNode.put("output", gameStats.getPlayerTwoWins());
+        output.add(objectNode);
+    }
+
+    public static void processGetTotalGamesPlayed(final GameStats gameStats,
+                                                  final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        objectNode.put("command", "getTotalGamesPlayed");
+        objectNode.put("output", gameStats.getTotalGamesPlayed());
+        output.add(objectNode);
     }
 
     public String getCommand() {
