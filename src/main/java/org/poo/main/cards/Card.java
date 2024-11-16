@@ -139,7 +139,8 @@ public class Card {
             return false;
         }
 
-        if (getHasAttacked() || (hasSpecialAbility() && ((SpecialAbilityCard)this).hasUsedAbility())) {
+        if (getHasAttacked() || (hasSpecialAbility()
+                && ((SpecialAbilityCard) this).hasUsedAbility())) {
             cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                     "Attacker card has already attacked this turn.", objectNode, mapper);
             return false;
@@ -250,7 +251,8 @@ public class Card {
             return false;
         }
 
-        if (getHasAttacked() || (hasSpecialAbility() && ((SpecialAbilityCard)this).hasUsedAbility())) {
+        if (getHasAttacked() || (hasSpecialAbility()
+                && ((SpecialAbilityCard) this).hasUsedAbility())) {
             useAttackHeroFailed(cardAttackerCoordinates,
                     "Attacker card has already attacked this turn.", objectNode, mapper);
             return false;
@@ -353,7 +355,7 @@ public class Card {
         return hasSpecialAbility;
     }
 
-    public void setHasSpecialAbility(boolean hasSpecialAbility) {
+    public void setHasSpecialAbility(final boolean hasSpecialAbility) {
         this.hasSpecialAbility = hasSpecialAbility;
     }
 
@@ -361,7 +363,7 @@ public class Card {
         return allowedPosition;
     }
 
-    public void setAllowedPosition(Position allowedPosition) {
+    public void setAllowedPosition(final Position allowedPosition) {
         this.allowedPosition = allowedPosition;
     }
 }

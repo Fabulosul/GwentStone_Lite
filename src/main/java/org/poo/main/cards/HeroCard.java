@@ -1,6 +1,5 @@
 package org.poo.main.cards;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.fileio.CardInput;
 import org.poo.main.Player;
@@ -10,26 +9,27 @@ import org.poo.main.Table;
 import java.util.ArrayList;
 
 public class HeroCard extends Card {
+    public static final int INITIAL_HERO_HEALTH = 30;
     private boolean hasUsedHeroAbility;
 
 
     public HeroCard() {
         super();
-        setHealth(30);
+        setHealth(INITIAL_HERO_HEALTH);
         setHasUsedHeroAbility(false);
         setHasSpecialAbility(true);
         setAllowedPosition(Position.NONE);
     }
 
-    public HeroCard(CardInput card) {
+    public HeroCard(final CardInput card) {
         super(card);
-        setHealth(30);
+        setHealth(INITIAL_HERO_HEALTH);
         setHasUsedHeroAbility(false);
         setHasSpecialAbility(true);
         setAllowedPosition(Position.NONE);
     }
 
-    public static HeroCard createHeroCard(CardInput heroCard) {
+    public static HeroCard createHeroCard(final CardInput heroCard) {
         return switch (heroCard.getName()) {
             case "Lord Royce" -> new LordRoyce(heroCard);
             case "Empress Thorina" -> new EmpressThorina(heroCard);
@@ -69,7 +69,7 @@ public class HeroCard extends Card {
      * @param affectedRow - the row that is affected by the hero's ability
      * @param player - the player that uses the hero's ability
      */
-    public void useHeroAbilitySucceeded(ArrayList<Card> affectedRow,
+    public void useHeroAbilitySucceeded(final ArrayList<Card> affectedRow,
                                         final Player player) {
         setHasUsedHeroAbility(true);
         player.setMana(player.getMana() - getMana());

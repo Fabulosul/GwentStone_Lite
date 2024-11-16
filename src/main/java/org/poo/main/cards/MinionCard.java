@@ -11,7 +11,7 @@ public class MinionCard extends Card {
         setHasSpecialAbility(false);
     }
 
-    public MinionCard(CardInput card) {
+    public MinionCard(final CardInput card) {
         super(card);
         isTank = card.getName().equals("Warden") || card.getName().equals("Goliath");
         setHasSpecialAbility(false);

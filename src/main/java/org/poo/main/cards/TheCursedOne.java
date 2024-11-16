@@ -3,20 +3,20 @@ package org.poo.main.cards;
 
 import org.poo.fileio.CardInput;
 
-public class TheCursedOne extends SpecialAbilityCard{
+public final class TheCursedOne extends SpecialAbilityCard {
 
     public TheCursedOne() {
         super();
         setAllowedPosition(Position.BACK);
     }
 
-    public TheCursedOne(CardInput card) {
+    public TheCursedOne(final CardInput card) {
         super(card);
         setAllowedPosition(Position.BACK);
     }
 
     @Override
-    public void useAbility(MinionCard minionCard) {
+    public void useAbility(final MinionCard minionCard) {
         super.useAbility(minionCard);
 
         int cardAttackedHealth = minionCard.getHealth();

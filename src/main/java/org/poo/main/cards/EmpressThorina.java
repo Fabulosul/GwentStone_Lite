@@ -6,17 +6,17 @@ import org.poo.fileio.CardInput;
 
 import java.util.ArrayList;
 
-public class EmpressThorina extends HeroCard {
+public final class EmpressThorina extends HeroCard {
     public EmpressThorina() {
         super();
     }
 
-    public EmpressThorina(CardInput card) {
+    public EmpressThorina(final CardInput card) {
         super(card);
     }
 
     @Override
-    public void useHeroAbility(ArrayList<Card> row) {
+    public void useHeroAbility(final ArrayList<Card> row) {
         int highestHealth = -1;
         int highestHealthIdx = -1;
         for (int i = 0; i < row.size(); i++) {

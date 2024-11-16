@@ -1,18 +1,13 @@
 package org.poo.fileio;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-
 import java.util.ArrayList;
 
 public final class CardInput {
-    public static final int INITIAL_HERO_HEALTH = 30;
     private int mana;
     private int attackDamage;
     private int health;
     private boolean isFrozen;
-    public boolean hasAttacked;
+    private boolean hasAttacked;
     private boolean hasUsedAbility;
     private String description;
     private ArrayList<String> colors;

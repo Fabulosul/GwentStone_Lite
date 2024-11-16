@@ -17,7 +17,7 @@ public class SpecialAbilityCard extends Card {
         setHasSpecialAbility(true);
     }
 
-    public SpecialAbilityCard(CardInput card) {
+    public SpecialAbilityCard(final CardInput card) {
         super(card);
         hasUsedAbility = false;
         setHasSpecialAbility(true);

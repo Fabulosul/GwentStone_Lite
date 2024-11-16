@@ -4,17 +4,17 @@ import org.poo.fileio.CardInput;
 
 import java.util.ArrayList;
 
-public class KingMudface extends HeroCard {
+public final class KingMudface extends HeroCard {
     public KingMudface() {
         super();
     }
 
-    public KingMudface(CardInput card) {
+    public KingMudface(final CardInput card) {
         super(card);
     }
 
     @Override
-    public void useHeroAbility(ArrayList<Card> row) {
+    public void useHeroAbility(final ArrayList<Card> row) {
         for (Card currentCard : row) {
             currentCard.setHealth(currentCard.getHealth() + 1);
         }
