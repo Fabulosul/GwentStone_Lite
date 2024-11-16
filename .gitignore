@@ -1,0 +1,10 @@
+# Java build files
+*.class
+*.jar
+
+
+# IntelliJ IDEA specific files and directories
+.idea/
+
+
+
