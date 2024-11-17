@@ -1,18 +1,27 @@
-package org.poo.main.cards;
+package org.poo.main.cards.herocards;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.fileio.CardInput;
 import org.poo.main.Player;
 import org.poo.main.Table;
+import org.poo.main.cards.Card;
 
 
 import java.util.ArrayList;
 
 public class HeroCard extends Card {
     public static final int INITIAL_HERO_HEALTH = 30;
+    /** field that stores if the hero has used its ability in the current turn */
     private boolean hasUsedHeroAbility;
 
-
+    /**
+     * Default constructor for the HeroCard class which calls the super constructor
+     * and also sets the initial health of the hero to 30, the hasUsedHeroAbility
+     * field to false since it's the start of the game and the hasSpecialAbility
+     * field to true because heroes have special abilities.
+     * The allowed position is also set to NONE because heroes don't have a specific position
+     * on the table.
+     */
     public HeroCard() {
         super();
         setHealth(INITIAL_HERO_HEALTH);
@@ -21,6 +30,15 @@ public class HeroCard extends Card {
         setAllowedPosition(Position.NONE);
     }
 
+    /**
+     * Copy constructor for the HeroCard class which calls the super constructor
+     * for the actual coping and also sets the initial health of the hero to 30,
+     * the hasUsedHeroAbility field to false since it's the start of the game and
+     * the hasSpecialAbility field to true because heroes have special abilities.
+     * The allowed position is also set to NONE because heroes don't have a specific position
+     * on the table.
+     * @param card - the card to be copied
+     */
     public HeroCard(final CardInput card) {
         super(card);
         setHealth(INITIAL_HERO_HEALTH);
@@ -29,6 +47,11 @@ public class HeroCard extends Card {
         setAllowedPosition(Position.NONE);
     }
 
+    /**
+     * Method that creates an instance of a particular hero card based on the name of the card
+     * @param heroCard - the hero card given as input containing the information about the card
+     * @return an instance of the hero card depending on the name of the card
+     */
     public static HeroCard createHeroCard(final CardInput heroCard) {
         return switch (heroCard.getName()) {
             case "Lord Royce" -> new LordRoyce(heroCard);
@@ -37,6 +60,18 @@ public class HeroCard extends Card {
             case "General Kocioraw" -> new GeneralKocioraw(heroCard);
             default -> null;
         };
+    }
+
+    /**
+     * Method specially designed to be overridden by the subclasses to check if the hero can use
+     * its ability.
+     * @param affectedRow - the row on which the hero's ability might be used
+     * @param currentPlayerTurn - the id of the player with the turn in progress
+     * @return - false because the hero can't use its ability by default without proper conditions
+     * which are tested in the subclasses
+     */
+    public boolean canUseHeroAbility(final int affectedRow, final int currentPlayerTurn) {
+        return false;
     }
 
     /**
@@ -115,17 +150,14 @@ public class HeroCard extends Card {
             return false;
         }
 
-        if ((getName().equals("Lord Royce") || getName().equals("Empress Thorina"))
-                && !isOpponentRow(affectedRow, currentPlayerTurn)) {
-            useHeroAbilityFailed(affectedRow, "Selected row does not belong to the enemy.",
-                    objectNode);
-            return false;
-        }
-
-        if ((getName().equals("General Kocioraw") || getName().equals("King Mudface"))
-                && isOpponentRow(affectedRow, currentPlayerTurn)) {
-            useHeroAbilityFailed(affectedRow,
-                    "Selected row does not belong to the current player.", objectNode);
+        if (!canUseHeroAbility(affectedRow, currentPlayerTurn)) {
+            if (!isOpponentRow(affectedRow, currentPlayerTurn)) {
+                useHeroAbilityFailed(affectedRow, "Selected row does not belong to the enemy.",
+                        objectNode);
+            } else {
+                useHeroAbilityFailed(affectedRow,
+                        "Selected row does not belong to the current player.", objectNode);
+            }
             return false;
         }
 
@@ -133,16 +165,44 @@ public class HeroCard extends Card {
         return true;
     }
 
-
-    public void useHeroAbility(ArrayList<Card> row) {
+    /**
+     * Method that uses the hero's ability based on the hero's type.
+     * It was designed to be overridden by the subclasses to implement specific actions depending on
+     * the hero of the player whose turn is in progress.
+     * @param row - the row on which the hero's ability is used
+     */
+    public void useHeroAbility(final ArrayList<Card> row) {
         hasUsedHeroAbility = true;
     }
 
-    public boolean hasUsedHeroAbility() {
+    /**
+     * Helper method that checks if the row given as parameter belongs to the player whose
+     * turn isn't in progress.
+     *
+     * @param affectedRow - the row that is checked
+     * @param currentPlayerTurn - the id of the player with the turn in progress
+     * @return true if the row belongs to the opponent, false if the row belongs to the
+     * current player
+     */
+    public boolean isOpponentRow(final int affectedRow, final int currentPlayerTurn) {
+        if (currentPlayerTurn == Player.PLAYER_ONE_ID && affectedRow != Table.PLAYER_TWO_BACK_ROW
+                && affectedRow != Table.PLAYER_TWO_FRONT_ROW) {
+            return false;
+        }
+        return currentPlayerTurn != Player.PLAYER_TWO_ID
+                || affectedRow == Table.PLAYER_ONE_FRONT_ROW
+                || affectedRow == Table.PLAYER_ONE_BACK_ROW;
+    }
+
+    /**
+     * Getter for the hasUsedHeroAbility field
+     * @return true if the hero has already used its ability this turn, false otherwise
+     */
+    public final boolean hasUsedHeroAbility() {
         return hasUsedHeroAbility;
     }
 
-    public void setHasUsedHeroAbility(boolean hasUsedHeroAbility) {
+    public final void setHasUsedHeroAbility(final boolean hasUsedHeroAbility) {
         this.hasUsedHeroAbility = hasUsedHeroAbility;
     }
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.fileio.ActionsInput;
 import org.poo.fileio.Coordinates;
 import org.poo.main.cards.Card;
-import org.poo.main.cards.SpecialAbilityCard;
+import org.poo.main.cards.specialabilitycards.SpecialAbilityCard;
 
 
 import java.util.ArrayList;

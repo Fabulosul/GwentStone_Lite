@@ -7,19 +7,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.poo.checker.Checker;
 import org.poo.checker.CheckerConstants;
-import org.poo.fileio.ActionsInput;
-import org.poo.fileio.CardInput;
-import org.poo.fileio.DecksInput;
 import org.poo.fileio.Input;
-import org.poo.main.cards.Card;
-import org.poo.main.cards.HeroCard;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -100,45 +94,9 @@ public final class Main {
 
         int nrGames = inputData.getGames().size();
         for (int i = 0; i < nrGames; i++) {
-           int playerOneDeckIdx = inputData.getGames().get(i).getStartGame().getPlayerOneDeckIdx();
-           int playerTwoDeckIdx = inputData.getGames().get(i).getStartGame().getPlayerTwoDeckIdx();
-           int shuffleSeed = inputData.getGames().get(i).getStartGame().getShuffleSeed();
-           int startingPlayer = inputData.getGames().get(i).getStartGame().getStartingPlayer();
-
-           ArrayList<Card> playerOneDeck = DecksInput.chooseDeck(playerOneDeckIdx,
-                   inputData.getPlayerOneDecks().getDecks());
-           ArrayList<Card> playerTwoDeck = DecksInput.chooseDeck(playerTwoDeckIdx,
-                   inputData.getPlayerTwoDecks().getDecks());
-
-           ArrayList<Card> playerOneShuffledDeck
-                   = DecksInput.shuffleDeck(playerOneDeck, shuffleSeed);
-           ArrayList<Card> playerTwoShuffledDeck
-                   = DecksInput.shuffleDeck(playerTwoDeck, shuffleSeed);
-
-           CardInput playerOneHeroCard = inputData.getGames().get(i).getStartGame().getPlayerOneHero();
-           CardInput playerTwoHeroCard = inputData.getGames().get(i).getStartGame().getPlayerTwoHero();
-
-           HeroCard playerOneHero = HeroCard.createHeroCard(playerOneHeroCard);
-           HeroCard playerTwoHero = HeroCard.createHeroCard(playerTwoHeroCard);
-
-           Player playerOne = new Player(1, playerOneHero, playerOneShuffledDeck);
-           Player playerTwo = new Player(2, playerTwoHero, playerTwoShuffledDeck);
-
-           playerOne.drawCard();
-           playerTwo.drawCard();
-
-           Game game = new Game(startingPlayer);
-
-           Table table = new Table();
-
-           gameStats.setGameOver(false);
-
-           int nrActions = inputData.getGames().get(i).getActions().size();
-           for (int j = 0; j < nrActions; j++) {
-                ActionsInput currentAction = inputData.getGames().get(i).getActions().get(j);
-                CommandHandler.handleCommands(currentAction, game, playerOne, playerTwo, table,
-                        gameStats, output);
-           }
+            int startingPlayer = inputData.getGames().get(i).getStartGame().getStartingPlayer();
+            Game game = new Game(startingPlayer);
+            game.start(inputData, gameStats, output, i);
         }
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();

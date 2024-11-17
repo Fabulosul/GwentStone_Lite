@@ -6,28 +6,38 @@ import org.poo.fileio.CardInput;
 import org.poo.fileio.Coordinates;
 import org.poo.main.Player;
 import org.poo.main.Table;
+import org.poo.main.cards.herocards.HeroCard;
+import org.poo.main.cards.specialabilitycards.SpecialAbilityCard;
 
 
 import java.util.ArrayList;
 
 public class Card {
-    public static final int INITIAL_HERO_HEALTH = 30;
+    /** Enum used to specify the position of a card on the table. */
     public enum Position {
         FRONT,
         BACK,
         NONE
     }
+    /** The position where a card can be placed on the table. */
     private Position allowedPosition;
+    /** A boolean field that stores whether a card is frozen or not */
+    private boolean isFrozen;
+    /** A boolean field that stores whether a card has already attacked this turn or not */
+    private boolean hasAttacked;
+    /** A boolean field that stores whether a card has a special ability or not */
+    private boolean hasSpecialAbility;
     private int mana;
     private int attackDamage;
     private int health;
-    private boolean isFrozen;
-    private boolean hasAttacked;
-    private boolean hasSpecialAbility;
     private String description;
     private ArrayList<String> colors;
     private String name;
 
+    /**
+     * Default constructor for the Card class that initializes the isFrozen
+     * and hasAttacked fields to false.
+     */
     public Card() {
         isFrozen = false;
         hasAttacked = false;
@@ -152,13 +162,12 @@ public class Card {
             return false;
         }
 
-        if (table.hasTankCards(cardAttackedId)) {
-            if (cardAttackedCoordinates.getX() != Table.PLAYER_TWO_FRONT_ROW
+        if (table.hasTankCards(cardAttackedId)
+                && cardAttackedCoordinates.getX() != Table.PLAYER_TWO_FRONT_ROW
                     && cardAttackedCoordinates.getX() != Table.PLAYER_ONE_FRONT_ROW) {
-                cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
-                        "Attacked card is not of type 'Tank'.", objectNode, mapper);
-                return false;
-            }
+            cardUsesAttackFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                    "Attacked card is not of type 'Tank'.", objectNode, mapper);
+            return false;
         }
         setHasAttacked(true);
         if (cardAttacked.getHealth() > this.getAttackDamage()) {
@@ -268,102 +277,87 @@ public class Card {
         return true;
     }
 
-    /**
-     * Method that checks if the row given as parameter belongs to the player whose
-     * turn isn't in progress.
-     *
-     * @param affectedRow - the row that is checked
-     * @param currentPlayerTurn - the id of the player with the turn in progress
-     * @return true if the row belongs to the opponent, false if the row belongs to the
-     * current player
-     */
-    public boolean isOpponentRow(final int affectedRow, final int currentPlayerTurn) {
-        if (currentPlayerTurn == Player.PLAYER_ONE_ID && affectedRow != Table.PLAYER_TWO_BACK_ROW
-                && affectedRow != Table.PLAYER_TWO_FRONT_ROW) {
-            return false;
-        }
-        return currentPlayerTurn != Player.PLAYER_TWO_ID
-                || affectedRow == Table.PLAYER_ONE_FRONT_ROW
-                || affectedRow == Table.PLAYER_ONE_BACK_ROW;
-    }
-
-    public int getMana() {
+    public final int getMana() {
         return mana;
     }
 
-    public void setMana(final int mana) {
+    public final void setMana(final int mana) {
         this.mana = mana;
     }
 
-    public int getAttackDamage() {
+    public final int getAttackDamage() {
         return attackDamage;
     }
 
-    public void setAttackDamage(final int attackDamage) {
+    public final void setAttackDamage(final int attackDamage) {
         this.attackDamage = attackDamage;
     }
 
-    public int getHealth() {
+    public final int getHealth() {
         return health;
     }
 
-    public void setHealth(final int health) {
+    public final void setHealth(final int health) {
         this.health = health;
     }
 
-    public String getDescription() {
+    public final String getDescription() {
         return description;
     }
 
-    public void setDescription(final String description) {
+    public final void setDescription(final String description) {
         this.description = description;
     }
 
-    public ArrayList<String> getColors() {
+    public final ArrayList<String> getColors() {
         return colors;
     }
 
-    public void setColors(final ArrayList<String> colors) {
+    public final void setColors(final ArrayList<String> colors) {
         this.colors = colors;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public void setName(final String name) {
+    public final void setName(final String name) {
         this.name = name;
     }
 
-    public boolean getHasAttacked() {
+    public final boolean getHasAttacked() {
         return hasAttacked;
     }
 
-    public void setHasAttacked(final boolean hasAttacked) {
+    public final void setHasAttacked(final boolean hasAttacked) {
         this.hasAttacked = hasAttacked;
     }
 
-    public boolean isFrozen() {
+    public final boolean isFrozen() {
         return isFrozen;
     }
 
-    public void setIsFrozen(final boolean isFrozen) {
+    public final void setIsFrozen(final boolean isFrozen) {
         this.isFrozen = isFrozen;
     }
 
-    public boolean hasSpecialAbility() {
+    /**
+     * Getter for the hasSpecialAbility field
+     * @return true if the card has a special ability, false otherwise
+     */
+    public final boolean hasSpecialAbility() {
         return hasSpecialAbility;
     }
 
-    public void setHasSpecialAbility(final boolean hasSpecialAbility) {
+    public final void setHasSpecialAbility(final boolean hasSpecialAbility) {
         this.hasSpecialAbility = hasSpecialAbility;
     }
 
-    public Position getAllowedPosition() {
+    public final Position getAllowedPosition() {
         return allowedPosition;
     }
 
-    public void setAllowedPosition(final Position allowedPosition) {
+    public final void setAllowedPosition(final Position allowedPosition) {
         this.allowedPosition = allowedPosition;
     }
 }

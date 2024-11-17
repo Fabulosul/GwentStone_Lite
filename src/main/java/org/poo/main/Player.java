@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.poo.fileio.ActionsInput;
 import org.poo.main.cards.Card;
-import org.poo.main.cards.HeroCard;
+import org.poo.main.cards.herocards.HeroCard;
 
 import java.util.ArrayList;
 
@@ -35,11 +35,6 @@ public final class Player {
             cardsInHand.add(deck.get(0));
             deck.remove(0);
         }
-    }
-
-    private boolean isBackRowCard(final Card card) {
-        return card.getName().equals("Sentinel") || card.getName().equals("Berserker")
-                || card.getName().equals("The Cursed One") || card.getName().equals("Disciple");
     }
 
     public ArrayNode addCardsInHandToArr(final ObjectNode objectNode, final ObjectMapper mapper) {
@@ -196,7 +191,7 @@ public final class Player {
             return true;
         }
         Card.Position position = getCardsInHand().get(handIdx).getAllowedPosition();
-        if (getCardsInHand().get(handIdx).getAllowedPosition() == Card.Position.BACK) {
+        if (position == Card.Position.BACK) {
             return placeCardInBackRow(objectNode, mapper, handIdx, table);
         } else {
             return placeCardInFrontRow(objectNode, mapper, handIdx, table);

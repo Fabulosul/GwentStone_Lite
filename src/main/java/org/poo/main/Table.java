@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.main.cards.Card;
-import org.poo.main.cards.SpecialAbilityCard;
+import org.poo.main.cards.minioncards.MinionCard;
+import org.poo.main.cards.specialabilitycards.SpecialAbilityCard;
 
 
 import java.util.ArrayList;
@@ -72,22 +73,16 @@ public final class Table {
 
     public boolean hasTankCards(final int playerIdx) {
         if (playerIdx == 1) {
-            if (getTableCards().get(2) == null) {
-                System.out.println("is null");
-            }
             for (int j = 0; j < getTableCards().get(2).size(); j++) {
-                if (getTableCards().get(2).get(j).getName().equals("Goliath")
-                        || getTableCards().get(2).get(j).getName().equals("Warden")) {
+                Card card = getTableCards().get(2).get(j);
+                if (!card.hasSpecialAbility() && ((MinionCard) card).isTank()) {
                     return true;
                 }
             }
         } else {
-            if (getTableCards().get(1) == null) {
-                System.out.println("is null");
-            }
             for (int j = 0; j < getTableCards().get(1).size(); j++) {
-                if (getTableCards().get(1).get(j).getName().equals("Goliath")
-                        || getTableCards().get(1).get(j).getName().equals("Warden")) {
+                Card card = getTableCards().get(1).get(j);
+                if (!card.hasSpecialAbility() && ((MinionCard) card).isTank()) {
                     return true;
                 }
             }
@@ -136,7 +131,7 @@ public final class Table {
         return tableCards;
     }
 
-    public void setTableCards(ArrayList<ArrayList<Card>> tableCards) {
+    public void setTableCards(final ArrayList<ArrayList<Card>> tableCards) {
         this.tableCards = tableCards;
     }
 }

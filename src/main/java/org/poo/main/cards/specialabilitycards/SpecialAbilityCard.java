@@ -1,4 +1,4 @@
-package org.poo.main.cards;
+package org.poo.main.cards.specialabilitycards;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -6,8 +6,8 @@ import org.poo.fileio.CardInput;
 import org.poo.fileio.Coordinates;
 import org.poo.main.Player;
 import org.poo.main.Table;
-
-import java.util.ArrayList;
+import org.poo.main.cards.Card;
+import org.poo.main.cards.minioncards.MinionCard;
 
 public class SpecialAbilityCard extends Card {
     private boolean hasUsedAbility;
@@ -22,6 +22,22 @@ public class SpecialAbilityCard extends Card {
         hasUsedAbility = false;
         setHasSpecialAbility(true);
 
+    }
+
+    /**
+     * Method specially designed to be overridden in the subclasses to check whether
+     * a card can use its ability or not.
+     * In this class the method always returns false because an ability can't be used by default
+     * and in this class the method is not meant to be used directly.
+     * @param cardAttackerId - the id of the card that tries to use the ability
+     * @param cardAttackedId - the id of the card that is affected by the ability
+     * @return false
+     * #in the subclasses it returns true if the card can use its ability,
+     * false if the card can't use its ability,
+     * @see #canUseAbility in the subclasses for more details
+     */
+    public boolean canUseAbility(final int cardAttackerId, final int cardAttackedId) {
+        return false;
     }
 
     /**
@@ -48,60 +64,9 @@ public class SpecialAbilityCard extends Card {
                 message, objectNode, mapper);
     }
 
-
-    /**
-     * Method that handles the case when a card tries to use an ability on another card
-     * and succeeds.
-     * It sets the hasUsedAbility field to true to indicate that that specific card has used its
-     * ability this turn.
-     * It also checks the name of card attacker to apply the correct feature.
-     * The Ripper - reduces the attack damage of the attacked card by 2 points(the attack damage
-     * can't be negative so it truncates to 0 if the attack damage is less than 2)
-     * Miraj - swaps the health of the attacker card with the health of the attacked card
-     * The Cursed One - swaps the health of the attacked card with its attack damage(if the attack
-     * damage is 0, the card is removed from the table)
-     * Disciple - increases the health of the attacked card by 2 points
-     *
-     * @param cardAttacked - the card that is attacked
-     * @param cardAttackedCoordinates - the coordinates of the card that is attacked
-     * @param table - the table(game board) where the cards are placed in two rows for each player
-     */
-    public void cardUsesAbilitySucceeded(final Card cardAttacked,
-                                         final Coordinates cardAttackedCoordinates,
-                                         final Table table) {
-        setHasUsedAbility(true);
-        if (getName().equals("The Ripper")) {
-            if (cardAttacked.getAttackDamage() < 2) {
-                cardAttacked.setAttackDamage(0);
-            } else {
-                cardAttacked.setAttackDamage(cardAttacked.getAttackDamage() - 2);
-            }
-        }
-        if (getName().equals("Miraj")) {
-            int cardAttackerHealth = getHealth();
-            setHealth(cardAttacked.getHealth());
-            cardAttacked.setHealth(cardAttackerHealth);
-        }
-        if (getName().equals("The Cursed One")) {
-            if (cardAttacked.getAttackDamage() == 0) {
-                ArrayList<Card> cardAttackedRow
-                        = table.getTableCards().get(cardAttackedCoordinates.getX());
-                cardAttackedRow.remove(cardAttackedCoordinates.getY());
-            } else {
-                int cardAttackedHealth = cardAttacked.getHealth();
-                cardAttacked.setHealth(cardAttacked.getAttackDamage());
-                cardAttacked.setAttackDamage(cardAttackedHealth);
-            }
-        }
-        if (getName().equals("Disciple")) {
-            int cardHealth = cardAttacked.getHealth();
-            cardAttacked.setHealth(cardHealth + 2);
-        }
-    }
-
     /**
      * Method that handles the case when a card tries to use an ability on another card.
-     * It checks if the card can use its ability and if it's possible the cardUsesAbilitySucceeded
+     * It checks if the card can use its ability and if it's possible the useAbility
      * method is called to handle this case.
      * On the other hand, if the card can't use its feature, the cardUsesAbilityFailed is used
      * to add information to the objectNode for the output(possible scenarios are when the
@@ -139,41 +104,52 @@ public class SpecialAbilityCard extends Card {
             return false;
         }
 
-        if (getName().equals("Disciple") && cardAttackerId != cardAttackedId) {
-            cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
-                    "Attacked card does not belong to the current player.", objectNode, mapper);
+        if (!canUseAbility(cardAttackerId, cardAttackedId)) {
+            if (cardAttackerId != cardAttackedId) {
+                cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                        "Attacked card does not belong to the current player.", objectNode, mapper);
+            } else {
+                cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                        "Attacked card does not belong to the enemy.", objectNode, mapper);
+            }
             return false;
         }
 
         if ((getName().equals("The Ripper") || getName().equals("Miraj")
-                || getName().equals("The Cursed One"))) {
-            if (cardAttackerId == cardAttackedId) {
-                cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
-                        "Attacked card does not belong to the enemy.", objectNode, mapper);
-                return false;
-            }
-            if (table.hasTankCards(cardAttackedId)
-                    && !cardAttacked.getName().equals("Goliath")
-                    && !cardAttacked.getName().equals("Warden")) {
+                || getName().equals("The Cursed One"))
+                    && table.hasTankCards(cardAttackedId)
+                        && (cardAttacked.hasSpecialAbility()
+                            || !((MinionCard) cardAttacked).isTank())) {
                 cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
                         "Attacked card is not of type 'Tank'.", objectNode, mapper);
                 return false;
-            }
         }
-        cardUsesAbilitySucceeded(cardAttacked, cardAttackedCoordinates, table);
+
+        useAbility(cardAttacked);
 
         return true;
     }
 
-    public void useAbility(MinionCard minionCard) {
+    /**
+     * Method designed to be overridden in the subclasses to handle the situation when a card
+     * uses its ability.
+     * In this class the method always sets the hasUsedAbility field to true because no matter
+     * the card if this method is called it means that the card can use its ability.
+     * @param minionCard - the card that uses the ability
+     */
+    public void useAbility(final Card minionCard) {
         hasUsedAbility = true;
     }
 
-    public boolean hasUsedAbility() {
+    /**
+     * Getter for the hasUsedAbility field
+     * @return true if the card has already used its ability this turn, false otherwise
+     */
+    public final boolean hasUsedAbility() {
         return hasUsedAbility;
     }
 
-    public void setHasUsedAbility(boolean hasUsedAbility) {
+    public final void setHasUsedAbility(final boolean hasUsedAbility) {
         this.hasUsedAbility = hasUsedAbility;
     }
 }

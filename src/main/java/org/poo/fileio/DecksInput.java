@@ -2,14 +2,14 @@ package org.poo.fileio;
 
 
 import org.poo.main.cards.Card;
-import org.poo.main.cards.Berserker;
-import org.poo.main.cards.Disciple;
-import org.poo.main.cards.Goliath;
-import org.poo.main.cards.Miraj;
-import org.poo.main.cards.Sentinel;
-import org.poo.main.cards.TheCursedOne;
-import org.poo.main.cards.TheRipper;
-import org.poo.main.cards.Warden;
+import org.poo.main.cards.minioncards.Berserker;
+import org.poo.main.cards.specialabilitycards.Disciple;
+import org.poo.main.cards.minioncards.Goliath;
+import org.poo.main.cards.specialabilitycards.Miraj;
+import org.poo.main.cards.minioncards.Sentinel;
+import org.poo.main.cards.specialabilitycards.TheCursedOne;
+import org.poo.main.cards.specialabilitycards.TheRipper;
+import org.poo.main.cards.minioncards.Warden;
 
 import java.util.ArrayList;
 import java.util.Collections;
