@@ -1,7 +1,11 @@
 package org.poo.main.cards.specialabilitycards;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.fileio.CardInput;
+import org.poo.fileio.Coordinates;
+import org.poo.main.Table;
 import org.poo.main.cards.Card;
 
 public final class Disciple extends SpecialAbilityCard {
@@ -41,15 +45,31 @@ public final class Disciple extends SpecialAbilityCard {
 
     /**
      * Method overridden from the superclass called SpecialAbilityCard
-     * that checks if the ability of the Disciple can be used on a card.
-     * The actual testing consists of measuring whether the player who attacks
+     * that checks if the ability of the Disciple can be used on a card
+     * by calling the superclass method and by measuring whether the player who attacks
      * has the same id as the player who is attacked.
+     *
      * @param cardAttackerId - the id of the player who owns the attacking card
      * @param cardAttackedId - the id of the player who owns the attacked card
      * @return true if the ability can be used and false if it's not possible to use the ability
      */
     @Override
-    public boolean canUseAbility(final int cardAttackerId, final int cardAttackedId) {
-        return cardAttackerId == cardAttackedId;
+    public boolean canUseAbility(final Card cardAttacked,
+                                 final int cardAttackerId, final int cardAttackedId,
+                                 final Coordinates cardAttackerCoordinates,
+                                 final Coordinates cardAttackedCoordinates,
+                                 final Table table,
+                                 final ObjectNode objectNode, final ObjectMapper mapper) {
+
+        if (!super.canUseAbility(cardAttacked, cardAttackerId, cardAttackedId,
+                cardAttackerCoordinates, cardAttackedCoordinates, table, objectNode, mapper)) {
+            return false;
+        }
+        if (cardAttackerId != cardAttackedId) {
+            cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                    "Attacked card does not belong to the current player.", objectNode, mapper);
+            return false;
+        }
+        return true;
     }
 }

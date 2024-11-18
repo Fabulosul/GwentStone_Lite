@@ -7,16 +7,27 @@ import org.poo.fileio.Coordinates;
 import org.poo.main.Player;
 import org.poo.main.Table;
 import org.poo.main.cards.Card;
-import org.poo.main.cards.minioncards.MinionCard;
 
 public class SpecialAbilityCard extends Card {
     private boolean hasUsedAbility;
 
+    /**
+     * Default constructor for the SpecialAbilityCard class.
+     * It calls the constructor from the superclass, sets the hasSpecialAbility field to true
+     * and the hasUsedAbility field to false.
+     */
     public SpecialAbilityCard() {
         super();
         setHasSpecialAbility(true);
     }
 
+    /**
+     * Copy constructor for the SpecialAbilityCard class.
+     * It calls the constructor from the superclass for the actual coping,
+     * sets the hasSpecialAbility field to true and the hasUsedAbility field to false.
+     *
+     * @param card - the card to be copied
+     */
     public SpecialAbilityCard(final CardInput card) {
         super(card);
         hasUsedAbility = false;
@@ -27,17 +38,35 @@ public class SpecialAbilityCard extends Card {
     /**
      * Method specially designed to be overridden in the subclasses to check whether
      * a card can use its ability or not.
-     * In this class the method always returns false because an ability can't be used by default
-     * and in this class the method is not meant to be used directly.
+     * In this class the method checks if the card is frozen, if it has already attacked
+     * or used its ability this turn.
+     *
      * @param cardAttackerId - the id of the card that tries to use the ability
      * @param cardAttackedId - the id of the card that is affected by the ability
      * @return false
+     *
      * #in the subclasses it returns true if the card can use its ability,
      * false if the card can't use its ability,
-     * @see #canUseAbility in the subclasses for more details
+     * @see #canUseAbility in the subclasses for more details about the implementation
      */
-    public boolean canUseAbility(final int cardAttackerId, final int cardAttackedId) {
-        return false;
+    public boolean canUseAbility(final Card cardAttacked,
+                                 final int cardAttackerId, final int cardAttackedId,
+                                 final Coordinates cardAttackerCoordinates,
+                                 final Coordinates cardAttackedCoordinates,
+                                 final Table table,
+                                 final ObjectNode objectNode, final ObjectMapper mapper) {
+        if (isFrozen()) {
+            cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                    "Attacker card is frozen.", objectNode, mapper);
+            return false;
+        }
+
+        if (getHasAttacked() || hasUsedAbility()) {
+            cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
+                    "Attacker card has already attacked this turn.", objectNode, mapper);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -92,37 +121,9 @@ public class SpecialAbilityCard extends Card {
         int cardAttackerId = Player.getPlayerByRow(cardAttackerCoordinates.getX());
         int cardAttackedId = Player.getPlayerByRow(cardAttackedCoordinates.getX());
 
-        if (isFrozen()) {
-            cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
-                    "Attacker card is frozen.", objectNode, mapper);
+        if (!canUseAbility(cardAttacked, cardAttackerId, cardAttackedId,
+                cardAttackerCoordinates, cardAttackedCoordinates, table, objectNode, mapper)) {
             return false;
-        }
-
-        if (getHasAttacked() || hasUsedAbility()) {
-            cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
-                    "Attacker card has already attacked this turn.", objectNode, mapper);
-            return false;
-        }
-
-        if (!canUseAbility(cardAttackerId, cardAttackedId)) {
-            if (cardAttackerId != cardAttackedId) {
-                cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
-                        "Attacked card does not belong to the current player.", objectNode, mapper);
-            } else {
-                cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
-                        "Attacked card does not belong to the enemy.", objectNode, mapper);
-            }
-            return false;
-        }
-
-        if ((getName().equals("The Ripper") || getName().equals("Miraj")
-                || getName().equals("The Cursed One"))
-                    && table.hasTankCards(cardAttackedId)
-                        && (cardAttacked.hasSpecialAbility()
-                            || !((MinionCard) cardAttacked).isTank())) {
-                cardUsesAbilityFailed(cardAttackerCoordinates, cardAttackedCoordinates,
-                        "Attacked card is not of type 'Tank'.", objectNode, mapper);
-                return false;
         }
 
         useAbility(cardAttacked);

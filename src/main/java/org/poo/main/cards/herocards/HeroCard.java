@@ -67,11 +67,22 @@ public class HeroCard extends Card {
      * its ability.
      * @param affectedRow - the row on which the hero's ability might be used
      * @param currentPlayerTurn - the id of the player with the turn in progress
-     * @return - false because the hero can't use its ability by default without proper conditions
-     * which are tested in the subclasses
+     * @return - true if the hero can use its ability, false otherwise
      */
-    public boolean canUseHeroAbility(final int affectedRow, final int currentPlayerTurn) {
-        return false;
+    public boolean canUseHeroAbility(final int affectedRow, final int currentPlayerTurn,
+                                     final Player player, final ObjectNode objectNode) {
+        if (player.getMana() < getMana()) {
+            useHeroAbilityFailed(affectedRow, "Not enough mana to use hero's ability.",
+                    objectNode);
+            return false;
+        }
+
+        if (hasUsedHeroAbility()) {
+            useHeroAbilityFailed(affectedRow, "Hero has already attacked this turn.",
+                    objectNode);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -138,26 +149,7 @@ public class HeroCard extends Card {
                                   final Player player, final Table table,
                                   final ObjectNode objectNode) {
 
-        if (player.getMana() < getMana()) {
-            useHeroAbilityFailed(affectedRow, "Not enough mana to use hero's ability.",
-                    objectNode);
-            return false;
-        }
-
-        if (hasUsedHeroAbility()) {
-            useHeroAbilityFailed(affectedRow, "Hero has already attacked this turn.",
-                    objectNode);
-            return false;
-        }
-
-        if (!canUseHeroAbility(affectedRow, currentPlayerTurn)) {
-            if (!isOpponentRow(affectedRow, currentPlayerTurn)) {
-                useHeroAbilityFailed(affectedRow, "Selected row does not belong to the enemy.",
-                        objectNode);
-            } else {
-                useHeroAbilityFailed(affectedRow,
-                        "Selected row does not belong to the current player.", objectNode);
-            }
+        if (!canUseHeroAbility(affectedRow, currentPlayerTurn, player, objectNode)) {
             return false;
         }
 

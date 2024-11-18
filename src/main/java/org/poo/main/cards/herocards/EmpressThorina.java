@@ -2,7 +2,9 @@ package org.poo.main.cards.herocards;
 
 
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.fileio.CardInput;
+import org.poo.main.Player;
 import org.poo.main.cards.Card;
 
 import java.util.ArrayList;
@@ -48,13 +50,25 @@ public final class EmpressThorina extends HeroCard {
     /**
      * Method overridden from the HeroCard class that checks if the Empress Thorina's ability
      * can be used on a row given in input.
-     * It checks whether the row belongs to the opponent or not.
+     * It checks whether the row belongs to the opponent or not, if the hero
+     * has already used its ability in the current turn and if the player
+     * has enough mana to use the hero's ability.
+     *
      * @param affectedRow - the row on which the hero's ability might be used
      * @param currentPlayerTurn - the id of the player with the turn in progress
      * @return true if the row belongs to the opponent, false otherwise
      */
     @Override
-    public boolean canUseHeroAbility(final int affectedRow, final int currentPlayerTurn) {
-        return isOpponentRow(affectedRow, currentPlayerTurn);
+    public boolean canUseHeroAbility(final int affectedRow, final int currentPlayerTurn,
+                                     final Player player, final ObjectNode objectNode) {
+        if (!super.canUseHeroAbility(affectedRow, currentPlayerTurn, player, objectNode)) {
+            return false;
+        }
+        if (!isOpponentRow(affectedRow, currentPlayerTurn)) {
+            useHeroAbilityFailed(affectedRow, "Selected row does not belong to the enemy.",
+                    objectNode);
+            return false;
+        }
+        return true;
     }
 }
