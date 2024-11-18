@@ -6,6 +6,10 @@ public final class GameStats {
     private int totalGamesPlayed;
     private boolean isGameOver;
 
+    /**
+     * Constructor for the GameStats class which sets the number of wins for player one
+     * and player two to 0 and the total number of games played to 0 at the beginning of a game.
+     */
     public GameStats() {
         this.playerOneWins = 0;
         this.playerTwoWins = 0;
