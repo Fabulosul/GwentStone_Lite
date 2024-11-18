@@ -104,6 +104,7 @@ public final class CommandHandler {
                     break;
 
                 default:
+                    System.out.println("Invalid command");
                     break;
             }
         }
