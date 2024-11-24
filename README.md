@@ -1,8 +1,7 @@
 **Tudor Robert-Fabian**
-**322CAa**
 **Anul 2024-2025**
 
-# Tema 0 - GwentStone Lite
+# GwentStone Lite
 
 ## Description:
 
