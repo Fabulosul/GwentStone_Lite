@@ -6,7 +6,7 @@
 
 ## Description:
 
-* The purpose of this homework is to make use of all the OOP concepts learned in the first 3 laboratories and also get familiar with Javadocs by implementing the basic functionality of a card game called GwentStone Lite, which is a combination between Hearthstone and Gwent. To make the idea easier to follow, the input is generated in the form of a JSON file by 
+* The purpose of this project is to make use of all the OOP concepts learned in the first 3 laboratories and also get familiar with Javadocs by implementing the basic functionality of a card game called GwentStone Lite, which is a combination between Hearthstone and Gwent. To make the idea easier to follow, the input is generated in the form of a JSON file by 
 AI to simulate the game and make sure all the rules are followed. 
 
 * The mechanic of the game is pretty straight-forward: two players compete with each over the course of several games to see who wins more matches. Each player starts with a deck of cards, which is shuffled before the match begins, and a hero card given in the input. As long as there are cards in the deck, every time a player ends its turn, a card from its deck is drawn and placed in his hand. During several turns, players are allowed to make different actions such as: place a card on the table, use a card to attack, use the ability of a card or the hero card and many more. The game ends when a player's hero(which initially had 30 health points) reaches 0 health points and, at that point, the "Game over" message is displayed and the winner is the player whose hero has more than 0 health points.
@@ -124,7 +124,7 @@ Though, if the debug command is not valid, the game continues with the next comm
 
 ## Conclusion:
 
-This homework was a great opportunity for my to put into practice all the concepts acknowledged during the first 3 laboratories and to make an idea about how a real-life project in Java is structored. Also, it was a good chance for me to comprehend the usefullness of Javadoc comments and how they can help a future reader better understand the implementation of the code. One other important aspect of this task was the fact that at the end of it I began to see the key differences between the functional programming and the OOP and how the latter can be more efficient in many cases, especially when the assignment is big and needs to be scalable. To sum up, this game was a good start into the Object-Oriented Programming world and I am looking forward to the next laboratories and homeworks to see how I can improve my skills and knowledge in this field.
+This project was a great opportunity for my to put into practice all the concepts acknowledged during the first 3 laboratories and to make an idea about how a real-life project in Java is structored. Also, it was a good chance for me to comprehend the usefullness of Javadoc comments and how they can help a future reader better understand the implementation of the code. One other important aspect of this task was the fact that at the end of it I began to see the key differences between the functional programming and the OOP and how the latter can be more efficient in many cases, especially when the assignment is big and needs to be scalable. To sum up, this game was a good start into the Object-Oriented Programming world and I am looking forward to the next laboratories and projects to see how I can improve my skills and knowledge in this field.
 
 
 
